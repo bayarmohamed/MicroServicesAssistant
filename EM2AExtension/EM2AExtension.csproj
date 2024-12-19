@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="Logic\Maker.cs" />
     <Compile Include="Logic\SolutionHelper.cs" />
+    <Compile Include="Options\General.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Commands\AddProject.cs" />
     <Compile Include="EM2AExtensionPackage.cs" />
@@ -55,11 +56,17 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>source.extension.vsixmanifest</DependentUpon>
     </Compile>
+    <Compile Include="Templates\CodeTemplates.cs" />
+    <Compile Include="ToolWindows\Wizard.xaml.cs">
+      <DependentUpon>Wizard.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModels\WizardViewModel.cs" />
     <Compile Include="VSCommandTable.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>VSCommandTable.vsct</DependentUpon>
     </Compile>
+    <Compile Include="WpfCommands\RelayCommand.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="source.extension.vsixmanifest">
@@ -81,9 +88,13 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Build" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Design" />
     <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Community.VisualStudio.VSCT" Version="16.0.29.6" PrivateAssets="all" />
@@ -94,6 +105,9 @@
     <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.MSBuild">
       <Version>4.12.0</Version>
     </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.ProjectSystem.VS">
+      <Version>17.9.380</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Shell.Interop">
       <Version>17.12.40391</Version>
     </PackageReference>
@@ -101,6 +115,12 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="ToolWindows\Wizard.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />

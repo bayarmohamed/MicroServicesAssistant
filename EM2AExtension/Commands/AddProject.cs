@@ -20,10 +20,10 @@ namespace EM2AExtension
             try
             {
                 string projectName;
-               
-                Maker maker = new Maker();
-                var project = await maker.CreateProject("Myproj4");
-                await maker.AddProjectToSolution(project);
+                new Wizard().Show();
+                //Maker maker = new Maker();
+                //var project = await maker.CreateProject("Myproj4");
+                //await maker.AddProjectToSolution(project);
             }
             catch (Exception ex)
             {

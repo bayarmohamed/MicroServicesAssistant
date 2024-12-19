@@ -1,69 +1,26 @@
-﻿using Microsoft.Build.Construction;
-using Microsoft.CodeAnalysis.MSBuild;
-using Microsoft.VisualStudio.ComponentModelHost;
+﻿using EnvDTE;
+using Microsoft.Build.Construction;
 using Microsoft.VisualStudio.Shell.Interop;
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using Project = EnvDTE.Project;
 
 namespace EM2AExtension.Logic
 {
     public class Maker
     {
+        EnvDTE80.DTE2 dte;
+        public Maker()
+        {
+             dte = ServiceProvider.GlobalProvider.GetService(typeof(SDTE)) as EnvDTE80.DTE2;
+        }
         public string FindSolutionPath(string currentDirectory)
         {
             var directory = new DirectoryInfo(currentDirectory);
             var files = Directory.GetFiles(directory.FullName, "*.sln", SearchOption.AllDirectories);
             return files[0];            
-        }
-        public async Task AttachProjectToCurrentSolution(string projectName ,string projectPath)
-        {
-            try
-            {
-                string currentDir = Directory.GetCurrentDirectory();
-                string solutionPath = FindSolutionPath(currentDir);
-
-
-                //string solutionPath = $"{solutionName}"; // Existing solution path
-                string newProjectName = $"{projectName}";
-                string newProjectPath = $@"{projectPath}\{newProjectName}";
-
-                // Initialize MSBuildWorkspace
-                using var workspace = MSBuildWorkspace.Create();
-
-                // Load the existing solution
-
-                var solution = workspace.CurrentSolution; // .OpenSolutionAsync(solutionPath).GetAwaiter().GetResult();
-                var componentModel = (IComponentModel)Microsoft.VisualStudio.Shell.Package.GetGlobalService(typeof(SComponentModel));
-                //var WSworkspace = componentModel.GetService<Microsoft.VisualStudio.LanguageServices.VisualStudioWorkspace>();
-
-              // var _roslynSolution = WSworkspace.CurrentSolution;
-
-                // Create a new project programmatically
-                var projectInfo = Microsoft.CodeAnalysis.ProjectInfo.Create(
-                    id: Microsoft.CodeAnalysis.ProjectId.CreateNewId(),
-                    version: Microsoft.CodeAnalysis.VersionStamp.Create(),
-                    name: newProjectName,
-                    assemblyName: newProjectName,
-                    language: "C#",
-                    filePath: newProjectPath);
-
-                // Add the new project to the solution
-                var updatedSolution = solution.AddProject(projectInfo);
-                workspace.TryApplyChanges(updatedSolution);
-
-                // Save the solution
-                File.WriteAllText(solutionPath, updatedSolution.FilePath);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            
-        }
+        }       
         public async Task<string> CreateProject(string projectName)
         {
             projectName = $"{projectName}.csproj";           
@@ -93,7 +50,7 @@ namespace EM2AExtension.Logic
         }
         public async Task AddProjectToSolution(string project)
         {
-            EnvDTE80.DTE2 dte = ServiceProvider.GlobalProvider.GetService(typeof(SDTE)) as EnvDTE80.DTE2;
+            
 
             if (dte != null)
             {
@@ -102,6 +59,28 @@ namespace EM2AExtension.Logic
                 // Specify the path to the project file you want to add
                 helper.AddProjectToSolution(project);
             }
+        }
+        public Project GetDefaultStartupProjects()
+        {
+            Array activeSolutionProjects = (Array)dte.ActiveSolutionProjects;
+            if (activeSolutionProjects.Length > 0)
+            {
+                return (Project)activeSolutionProjects.GetValue(0);
+            }
+            return null;
+        }
+
+        public void AddFileToProject(Project project, string fileName, string content)
+        {
+            // Chemin du dossier du projet
+            string projectFolder = Path.GetDirectoryName(project.FullName);
+            string filePath = System.IO.Path.Combine(projectFolder, fileName);
+
+            // Créer et écrire le contenu du fichier
+            System.IO.File.WriteAllText(filePath, content);
+
+            // Ajouter le fichier au projet
+            project.ProjectItems.AddFromFile(filePath);
         }
     }
 }
