@@ -12,9 +12,15 @@
                         d:DesignHeight="600"
                         d:DesignWidth="400">
     <Grid>
-        <ComboBox ItemsSource="{Binding Projects}" HorizontalAlignment="Left" Height="22" Margin="94,37,0,0" VerticalAlignment="Top" Width="127"/>
-        <Label Content="Project" HorizontalAlignment="Left" Height="34" Margin="17,37,0,0" VerticalAlignment="Top" Width="55"/>
-        <Button Command="{Binding CmdAddFile}" Content="Add file" HorizontalAlignment="Left" Height="28" Margin="300,37,0,0" VerticalAlignment="Top" Width="75"/>
+        <TextBox Text="{Binding SelectedProject}" HorizontalAlignment="Left" Height="34" Margin="97,19,0,0" VerticalAlignment="Top" Width="293"/>
+        <Label Content="Curent project" HorizontalAlignment="Left" Height="34" Margin="5,19,0,0" VerticalAlignment="Top" Width="108"/>
+        <Button Command="{Binding CmdAddFile}" Content="Add file" HorizontalAlignment="Left" Height="28" Margin="314,67,0,0" VerticalAlignment="Top" Width="76"/>
+        <TextBox  HorizontalAlignment="Left" Height="33" Margin="140,181,0,0" TextWrapping="Wrap" Text="{Binding PrjName}" VerticalAlignment="Top" Width="128"/>
+        <Label Content="New project name
+               " HorizontalAlignment="Left" Height="34" Margin="0,180,0,0" VerticalAlignment="Top" Width="118"/>
+        <Button Command="{Binding CmdAddProject}" Content="Create project" HorizontalAlignment="Left" Height="28" Margin="282,183,0,0" VerticalAlignment="Top" Width="98"/>
+        <TextBox Text="{Binding FileName}" HorizontalAlignment="Left" Height="34" Margin="97,61,0,0" VerticalAlignment="Top" Width="212"/>
+        <Label Content="File" HorizontalAlignment="Left" Height="34" Margin="0,61,0,0" VerticalAlignment="Top" Width="108"/>
 
     </Grid>
 </platform:DialogWindow>

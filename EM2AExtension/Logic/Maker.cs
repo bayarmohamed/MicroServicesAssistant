@@ -60,8 +60,9 @@ namespace EM2AExtension.Logic
                 helper.AddProjectToSolution(project);
             }
         }
-        public Project GetDefaultStartupProjects()
+        public Project GetSelectedProject()
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             Array activeSolutionProjects = (Array)dte.ActiveSolutionProjects;
             if (activeSolutionProjects.Length > 0)
             {

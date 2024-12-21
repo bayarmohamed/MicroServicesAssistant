@@ -21,9 +21,6 @@ namespace EM2AExtension
             {
                 string projectName;
                 new Wizard().Show();
-                //Maker maker = new Maker();
-                //var project = await maker.CreateProject("Myproj4");
-                //await maker.AddProjectToSolution(project);
             }
             catch (Exception ex)
             {
