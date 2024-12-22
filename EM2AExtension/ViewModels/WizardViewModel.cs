@@ -16,6 +16,7 @@ namespace EM2AExtension.ViewModels
     {
         public ICommand CmdAddFile { get; }
         public ICommand CmdAddProject { get; }
+        public ICommand CmdAddApiTemplateProject { get; }
         public string PrjName { get => prjName; set { prjName = value; OnPropertyChanged(); } }
         public string SelectedProject { get => selectedProject; set { selectedProject = value; OnPropertyChanged(); } }
         public string FileName { get => fileName; set { fileName = value; OnPropertyChanged(); } }
@@ -24,8 +25,26 @@ namespace EM2AExtension.ViewModels
         {
             CmdAddFile = new RelayCommand(ExecuteCommand, CanExecuteCommand);
             CmdAddProject = new RelayCommand(async (obj) => await AddNewProjectCommand(obj), CanExecuteAddNewProjectCommand);
+            CmdAddApiTemplateProject = new RelayCommand(async (obj) => await AddApiProjectFromTemplateCommand(obj), CanExecuteAddApiProjectFromTemplateCommand);
             maker = new Maker();
             GetProjectsNames();
+        }
+
+        private bool CanExecuteAddApiProjectFromTemplateCommand(object obj)
+        {
+            return true;
+        }
+
+        private async Task AddApiProjectFromTemplateCommand(object obj)
+        {
+            if (!string.IsNullOrEmpty(PrjName))
+            {
+                var project = await maker.CreateApiProject(prjName);
+                maker.AddProjectToSolution(project);
+                maker.AddFileToProject(maker.GetSelectedProject(), $"program.cs", CodeTemplates.programCode);
+                maker.AddFileToProject(maker.GetSelectedProject(), $"MyController.cs", CodeTemplates.controllerCode);
+
+            }
         }
 
         private bool CanExecuteAddNewProjectCommand(object obj)
@@ -38,7 +57,7 @@ namespace EM2AExtension.ViewModels
             if (!string.IsNullOrEmpty(PrjName))
             {
                 var project = await maker.CreateProject(prjName);
-                await maker.AddProjectToSolution(project);
+                maker.AddProjectToSolution(project);
             }
            
         }
@@ -50,7 +69,7 @@ namespace EM2AExtension.ViewModels
 
         private void ExecuteCommand(object obj)
         {
-            maker.AddFileToProject(maker.GetSelectedProject(), $"{FileName}.cs", CodeTemplates.ConsoleTemplate());
+            maker.AddFileToProject(maker.GetSelectedProject(), $"{FileName}.cs", CodeTemplates.ConsoleTemplate);
         }
 
         private void GetProjectsNames()

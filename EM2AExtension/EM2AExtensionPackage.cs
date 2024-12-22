@@ -2,6 +2,7 @@
 global using Microsoft.VisualStudio.Shell;
 global using System;
 global using Task = System.Threading.Tasks.Task;
+using EM2AExtension.Helpers;
 using System.Runtime.InteropServices;
 using System.Threading;
 
@@ -15,6 +16,7 @@ namespace EM2AExtension
     {
         protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
         {
+           // PathConstants.VisixProjectPath = this.InstallPath;
             await this.RegisterCommandsAsync();
             //await MyCommand.InitializeAsync(this);
         }

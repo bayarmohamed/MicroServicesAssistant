@@ -21,6 +21,7 @@
         <Button Command="{Binding CmdAddProject}" Content="Create project" HorizontalAlignment="Left" Height="28" Margin="282,183,0,0" VerticalAlignment="Top" Width="98"/>
         <TextBox Text="{Binding FileName}" HorizontalAlignment="Left" Height="34" Margin="97,61,0,0" VerticalAlignment="Top" Width="212"/>
         <Label Content="File" HorizontalAlignment="Left" Height="34" Margin="0,61,0,0" VerticalAlignment="Top" Width="108"/>
+        <Button Command="{Binding CmdAddApiTemplateProject}" Content="Creat Api Project" HorizontalAlignment="Left" Height="32" Margin="259,243,0,0" VerticalAlignment="Top" Width="111"/>
 
     </Grid>
 </platform:DialogWindow>

@@ -45,6 +45,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Helpers\PathConstants.cs" />
     <Compile Include="Logic\Maker.cs" />
     <Compile Include="Logic\SolutionHelper.cs" />
     <Compile Include="Options\General.cs" />
@@ -69,6 +70,10 @@
     <Compile Include="WpfCommands\RelayCommand.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="ProjectTemplates\APITemplate.zip">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>
       <Generator>VsixManifestGenerator</Generator>
@@ -122,13 +127,19 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
+  <!--To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.-->
+  <!--<Target Name="BeforeBuild">
+  </Target>-->
+  <Target Name="IncludeTemplateZipInVSIX" AfterTargets="Build">
+    <ItemGroup>
+      <Content Include="ProjectTemplates\APITemplate.zip">
+        <Pack>true</Pack>
+        <PackagePath>ProjectTemplates\</PackagePath>
+      </Content>
+    </ItemGroup>
   </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>
