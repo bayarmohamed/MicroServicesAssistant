@@ -42,7 +42,7 @@ namespace EM2AExtension.ViewModels
                 var project = await maker.CreateApiProject(prjName);
                 maker.AddProjectToSolution(project);
                 maker.AddFileToProject(maker.GetSelectedProject(), $"program.cs", CodeTemplates.programCode);
-                maker.AddFileToProject(maker.GetSelectedProject(), $"MyController.cs", CodeTemplates.controllerCode);
+                maker.AddFileToFolderProject(maker.GetSelectedProject(),"Controllers", $"MyController.cs", CodeTemplates.controllerCode);
 
             }
         }

@@ -128,6 +128,30 @@ namespace EM2AExtension.Logic
             // Ajouter le fichier au projet
             project.ProjectItems.AddFromFile(filePath);
         }
+        public void AddFileToFolderProject(Project project, string folder, string fileName, string content)
+        {
+            // Chemin du dossier du projet
+            string projectFolder = Path.GetDirectoryName(project.FullName);
+
+            string forlderPath = Path.Combine(projectFolder, $"{folder}");
+            string filePath = System.IO.Path.Combine(forlderPath, fileName);
+
+            // 1. Create the Controllers folder in the file system
+            if (!Directory.Exists(forlderPath))
+            {
+                Directory.CreateDirectory(forlderPath);
+            }
+
+            // 2. Add the folder to the project (appears in Solution Explorer)
+            ProjectItem folderItem = project.ProjectItems.AddFolder($"{folder}");
+
+            // Créer et écrire le contenu du fichier
+            System.IO.File.WriteAllText(filePath, content);
+
+            // Ajouter le fichier au projet
+            project.ProjectItems.AddFromFile(filePath);
+            project.Save();
+        }
         public void CreateApWebApiProjectFromTemplate()
         {
 
