@@ -2,7 +2,9 @@
 using EnvDTE;
 using EnvDTE80;
 using Microsoft.Build.Construction;
+using Microsoft.VisualStudio.ProjectSystem.VS;
 using Microsoft.VisualStudio.Shell.Interop;
+using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -55,11 +57,12 @@ namespace EM2AExtension.Logic
 
 
 
-        public async Task<string> CreateApiProject(string projectName)
+        public async Task<Tuple<string,ProjectRootElement>> CreateApiProject(string projectName)
         {
+            var projectFolder = projectName;
             projectName = $"{projectName}.csproj";
 
-            var projectPath = Path.Combine(Environment.CurrentDirectory, $"{projectName}");
+            var projectPath = Path.Combine(Environment.CurrentDirectory, $"{projectFolder}");
             Directory.CreateDirectory(projectPath);
             var csprojPath = Path.Combine(projectPath, $"{projectName}");
 
@@ -78,10 +81,65 @@ namespace EM2AExtension.Logic
             var itemGroup = project.AddItemGroup();
             itemGroup.AddItem("PackageReference", "Newtonsoft.Json", new[] { new KeyValuePair<string, string>("Version", "13.0.3") });
             itemGroup.AddItem("PackageReference", "Swashbuckle.AspNetCore", new[] { new KeyValuePair<string, string>("Version", "6.6.2") });
-
+            itemGroup.AddItem("PackageReference", "NSwag.AspNetCore", new[] { new KeyValuePair<string, string>("Version", "14.2.0") });
             // Save the .csproj file
             project.Save(csprojPath);
-            return await Task.FromResult(csprojPath);
+            return await Task.FromResult(Tuple.Create(csprojPath,project));
+        }
+        public async Task AddLaunchSettings(Project project)
+        {
+            var projectPath = Path.Combine(Environment.CurrentDirectory, $"{project.Name}");
+            string launchSettingsPath = Path.Combine(projectPath, "Properties", "launchSettings.json");
+            dynamic launchSettings = new
+            {
+                profiles = new
+                {
+                    API = new
+                    {
+                        commandName = "Project",
+                        launchBrowser = true,
+                        launchUrl = "swagger",
+                        applicationUrl = "https://localhost:5001",
+                        environmentVariables = new
+                        {
+                            ASPNETCORE_ENVIRONMENT = "Development"
+                        }
+                    }
+                }
+            };
+            string jsonContent = Newtonsoft.Json.JsonConvert.SerializeObject(launchSettings, Newtonsoft.Json.Formatting.Indented);
+            Directory.CreateDirectory(Path.Combine(projectPath, "Properties")); // Ensure Properties folder exists
+            File.WriteAllText(launchSettingsPath, jsonContent);
+        }
+        public Task ModifyLaunchSettings(Project project,string applicationName, string property, string value)
+        {
+            try
+            {
+                // Get the path to launchSettings.json
+                var projectPath = Path.Combine(Environment.CurrentDirectory, $"{project.Name}");
+                string launchSettingsPath = Path.Combine(projectPath, "Properties", "launchSettings.json");
+                // Read the launchSettings.json file
+                string jsonText = File.ReadAllText(launchSettingsPath);
+                JObject launchSettings = JObject.Parse(jsonText);
+                // Modify the launchSettings
+                JObject profiles = (JObject)launchSettings["profiles"];
+                JObject appProfile = (JObject)profiles[$"{applicationName}"];
+                appProfile[$"{property}"] = $"{value}";
+
+                JObject httpsProfile = (JObject)profiles["https"];
+                httpsProfile[$"{property}"] = $"{value}";
+                //httpsProfile["applicationUrl"] = "https://localhost:5001;http://localhost:5000";
+                //httpsProfile["applicationUrl"] = "https://localhost:5001;http://localhost:5000"; 
+                //httpsProfile["environmentVariables"]["ASPNETCORE_ENVIRONMENT"] = "Production";
+                // Save the changes
+                File.WriteAllText(launchSettingsPath, launchSettings.ToString());
+                return Task.CompletedTask;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            
         }
 
 

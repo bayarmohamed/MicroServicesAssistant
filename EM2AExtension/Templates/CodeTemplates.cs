@@ -24,15 +24,35 @@ namespace YourNamespace
         
 
         public static string programCode = @"
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
+builder.Services.AddEndpointsApiExplorer();
+
+builder.Services.AddOpenApiDocument(config =>
+{
+    config.Title = ""My API"";
+    config.Version = ""v1"";
+    config.Description = ""API documentation with NSwag"";
+});
+
 var app = builder.Build();
+
+// Configure the HTTP request pipeline
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwaggerUI();  // Swagger UI
+    app.UseOpenApi();     // Serves the OpenAPI/Swagger document
+}
+
 app.MapControllers();
 app.Run();
+
 ";
 
        public static string controllerCode = @"

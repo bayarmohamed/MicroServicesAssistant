@@ -10,6 +10,8 @@ using System.Windows.Input;
 using EM2AExtension.WpfCommands;
 using EM2AExtension.Templates;
 using System.ComponentModel;
+using System.Windows.Threading;
+using EnvDTE;
 namespace EM2AExtension.ViewModels
 {
     public class WizardViewModel:INotifyPropertyChanged
@@ -38,13 +40,27 @@ namespace EM2AExtension.ViewModels
         private async Task AddApiProjectFromTemplateCommand(object obj)
         {
             if (!string.IsNullOrEmpty(PrjName))
-            {
-                var project = await maker.CreateApiProject(prjName);
-                maker.AddProjectToSolution(project);
-                maker.AddFileToProject(maker.GetSelectedProject(), $"program.cs", CodeTemplates.programCode);
-                maker.AddFileToFolderProject(maker.GetSelectedProject(),"Controllers", $"MyController.cs", CodeTemplates.controllerCode);
-
+            {                
+                await Dispatcher.CurrentDispatcher.Invoke(async () =>
+                await CreateApi().ContinueWith(async r =>
+                {
+                    if (r.IsCompleted && !r.IsFaulted)
+                    {
+                        await maker.AddLaunchSettings(r.Result);
+                    }
+                })
+                );
             }
+        }
+
+        private async Task<EnvDTE.Project> CreateApi()
+        {
+            var project = await maker.CreateApiProject(prjName);
+
+            maker.AddProjectToSolution(project.Item1);
+            maker.AddFileToProject(maker.GetSelectedProject(), $"program.cs", CodeTemplates.programCode);
+            maker.AddFileToFolderProject(maker.GetSelectedProject(), "Controllers", $"MyController.cs", CodeTemplates.controllerCode);
+            return maker.GetSelectedProject();
         }
 
         private bool CanExecuteAddNewProjectCommand(object obj)
@@ -58,6 +74,7 @@ namespace EM2AExtension.ViewModels
             {
                 var project = await maker.CreateProject(prjName);
                 maker.AddProjectToSolution(project);
+               
             }
            
         }
