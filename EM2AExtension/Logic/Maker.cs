@@ -7,6 +7,7 @@ using Microsoft.VisualStudio.Shell.Interop;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using VSLangProj;
@@ -27,7 +28,7 @@ namespace EM2AExtension.Logic
             var files = Directory.GetFiles(directory.FullName, "*.sln", SearchOption.AllDirectories);
             return files[0];            
         }       
-        public async Task<string> CreateProject(string projectName)
+        public string CreateProject(string projectName)
         {
             projectName = $"{projectName}.csproj";           
 
@@ -52,12 +53,9 @@ namespace EM2AExtension.Logic
 
             // Save the .csproj file
             project.Save(csprojPath);
-            return await Task.FromResult(csprojPath);
+            return csprojPath;
         }
-
-
-
-        public async Task<Tuple<string,ProjectRootElement>> CreateApiProject(string projectName)
+        public Tuple<string,ProjectRootElement> CreateApiProject(string projectName)
         {
             var projectFolder = projectName;
             projectName = $"{projectName}.csproj";
@@ -84,9 +82,41 @@ namespace EM2AExtension.Logic
             itemGroup.AddItem("PackageReference", "NSwag.AspNetCore", new[] { new KeyValuePair<string, string>("Version", "14.2.0") });
             // Save the .csproj file
             project.Save(csprojPath);
-            return await Task.FromResult(Tuple.Create(csprojPath,project));
+            return Tuple.Create(csprojPath,project);
         }
-        public async Task AddLaunchSettings(Project project)
+        public Tuple<string, ProjectRootElement> CreateApiProjectInSelectedFolder(string projectName, string selectedFolder)
+        {
+            Solution2 solution = (Solution2)dte.Solution;
+            SelectedItem selectedItem = dte.SelectedItems.Item(1);
+
+            var projectFolder = selectedFolder + @"\"+ projectName;
+            projectName = $"{projectName}.csproj";
+
+            var projectPath = Path.Combine(Environment.CurrentDirectory, $"{projectFolder}");
+            Directory.CreateDirectory(projectPath);
+            var csprojPath = Path.Combine(projectPath, $"{projectName}");
+
+            // Create a new project root
+            ProjectRootElement project = ProjectRootElement.Create();
+
+            // Set the project SDK
+            project.Sdk = "Microsoft.NET.Sdk.Web";
+
+            // Add properties (e.g., target framework)
+            var propertyGroup = project.AddPropertyGroup();
+            propertyGroup.AddProperty("OutputType", "Exe");
+            propertyGroup.AddProperty("TargetFramework", "net8.0");
+
+            // Add an example package reference
+            var itemGroup = project.AddItemGroup();
+            itemGroup.AddItem("PackageReference", "Newtonsoft.Json", new[] { new KeyValuePair<string, string>("Version", "13.0.3") });
+            itemGroup.AddItem("PackageReference", "Swashbuckle.AspNetCore", new[] { new KeyValuePair<string, string>("Version", "6.6.2") });
+            itemGroup.AddItem("PackageReference", "NSwag.AspNetCore", new[] { new KeyValuePair<string, string>("Version", "14.2.0") });
+            // Save the .csproj file
+            project.Save(csprojPath);
+            return Tuple.Create(csprojPath, project);
+        }
+        public void AddLaunchSettings(Project project)
         {
             var projectPath = Path.Combine(Environment.CurrentDirectory, $"{project.Name}");
             string launchSettingsPath = Path.Combine(projectPath, "Properties", "launchSettings.json");
@@ -110,8 +140,10 @@ namespace EM2AExtension.Logic
             string jsonContent = Newtonsoft.Json.JsonConvert.SerializeObject(launchSettings, Newtonsoft.Json.Formatting.Indented);
             Directory.CreateDirectory(Path.Combine(projectPath, "Properties")); // Ensure Properties folder exists
             File.WriteAllText(launchSettingsPath, jsonContent);
+            project.Save();
+            
         }
-        public Task ModifyLaunchSettings(Project project,string applicationName, string property, string value)
+        public void ModifyLaunchSettings(Project project,string applicationName, string property, string value)
         {
             try
             {
@@ -133,7 +165,6 @@ namespace EM2AExtension.Logic
                 //httpsProfile["environmentVariables"]["ASPNETCORE_ENVIRONMENT"] = "Production";
                 // Save the changes
                 File.WriteAllText(launchSettingsPath, launchSettings.ToString());
-                return Task.CompletedTask;
             }
             catch (Exception ex)
             {
@@ -141,9 +172,6 @@ namespace EM2AExtension.Logic
             }
             
         }
-
-
-
         public void AddProjectToSolution(string project)
         {
             ThreadHelper.ThrowIfNotOnUIThread();
@@ -158,7 +186,7 @@ namespace EM2AExtension.Logic
             if (solution == null || !solution.IsOpen)
             {
                 throw new InvalidOperationException("No solution is open.");
-            }
+            }           
 
             // Add the project to the solution
             solution.AddFromFile(project);
@@ -173,7 +201,11 @@ namespace EM2AExtension.Logic
             }
             return null;
         }
-
+        public void CloseProject(Project prj)
+        {
+            prj.Save();
+            dte.Solution.Remove(prj);
+        }
         public void AddFileToProject(Project project, string fileName, string content)
         {
             // Chemin du dossier du projet
@@ -222,8 +254,6 @@ namespace EM2AExtension.Logic
 
             dte.Solution.AddFromTemplate(templatePath, projectPath, projectName, false);
             dte.StatusBar.Text = "Custom ASP.NET Core Web API Project Created!";
-        }
-
-      
+        }       
     }
 }

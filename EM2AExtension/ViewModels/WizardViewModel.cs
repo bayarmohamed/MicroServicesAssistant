@@ -26,9 +26,10 @@ namespace EM2AExtension.ViewModels
         public WizardViewModel()
         {
             CmdAddFile = new RelayCommand(ExecuteCommand, CanExecuteCommand);
-            CmdAddProject = new RelayCommand(async (obj) => await AddNewProjectCommand(obj), CanExecuteAddNewProjectCommand);
-            CmdAddApiTemplateProject = new RelayCommand(async (obj) => await AddApiProjectFromTemplateCommand(obj), CanExecuteAddApiProjectFromTemplateCommand);
+            CmdAddProject = new RelayCommand( (obj) =>  AddNewProjectCommand(obj), CanExecuteAddNewProjectCommand);
+            CmdAddApiTemplateProject = new RelayCommand( (obj) =>  AddApiProjectFromTemplateCommand(obj), CanExecuteAddApiProjectFromTemplateCommand);
             maker = new Maker();
+            directoriesMaker = new FoldersAndDirectoriesMaker();
             GetProjectsNames();
         }
 
@@ -37,30 +38,47 @@ namespace EM2AExtension.ViewModels
             return true;
         }
 
-        private async Task AddApiProjectFromTemplateCommand(object obj)
+        private  void AddApiProjectFromTemplateCommand(object obj)
         {
+            //maker.AddSubSubFolder("BE", "Core", "Services");
+            //maker.AddSolutionFolder("BE");
+            //maker.AddSolutionFolder("FE");
+            //directoriesMaker.AddPhysicalFolderToSolution(@"BE\be.md");
+            //maker.AddProjectToSolutionFolder("BE", @"C:\MySolution\BE\MyProject.csproj");
+
+            //**************************************************************
+            //directoriesMaker.AddSolutionFolder("BE");
+            //directoriesMaker.AddSolutionFolder("FE");
+
+
+
+
+            //**************************************************************
             if (!string.IsNullOrEmpty(PrjName))
-            {                
-                await Dispatcher.CurrentDispatcher.Invoke(async () =>
-                await CreateApi().ContinueWith(async r =>
-                {
-                    if (r.IsCompleted && !r.IsFaulted)
-                    {
-                        await maker.AddLaunchSettings(r.Result);
-                    }
-                })
-                );
+            {
+                CreateApi();
             }
         }
 
-        private async Task<EnvDTE.Project> CreateApi()
+        private void CreateApi()
         {
-            var project = await maker.CreateApiProject(prjName);
+            
+            //var project =  maker.CreateApiProject(prjName);
+            var project = maker.CreateApiProjectInSelectedFolder(prjName,selectedProject);
 
-            maker.AddProjectToSolution(project.Item1);
+
+            maker.AddProjectToSolution(project.Item1);           
             maker.AddFileToProject(maker.GetSelectedProject(), $"program.cs", CodeTemplates.programCode);
             maker.AddFileToFolderProject(maker.GetSelectedProject(), "Controllers", $"MyController.cs", CodeTemplates.controllerCode);
-            return maker.GetSelectedProject();
+            maker.AddLaunchSettings(maker.GetSelectedProject());
+            //maker.ModifyLaunchSettings(maker.GetSelectedProject(), "prjName","launch","swagger");
+            maker.CloseProject(maker.GetSelectedProject());
+
+
+            //directoriesMaker.AddProjectToSolutionFolder(selectedProjectFolder.Name, project.Item1);
+            //directoriesMaker.AddProjectToSubSolutionFolder(selectedProjectFolder.ParentProjectItem.Name, selectedProjectFolder.Name, project.Item1);
+            directoriesMaker.AddProjectToSubSolutionFolder("BE",prjName, project.Item1);
+
         }
 
         private bool CanExecuteAddNewProjectCommand(object obj)
@@ -68,15 +86,13 @@ namespace EM2AExtension.ViewModels
             return true;
         }
 
-        private async Task AddNewProjectCommand(object obj)
+        private  void AddNewProjectCommand(object obj)
         {
             if (!string.IsNullOrEmpty(PrjName))
             {
-                var project = await maker.CreateProject(prjName);
-                maker.AddProjectToSolution(project);
-               
-            }
-           
+                var project =  maker.CreateProject(prjName);
+                maker.AddProjectToSolution(project);               
+            }           
         }
 
         private bool CanExecuteCommand(object obj)
@@ -91,12 +107,14 @@ namespace EM2AExtension.ViewModels
 
         private void GetProjectsNames()
         {
-            var project = maker.GetSelectedProject();
-            SelectedProject = project is null ? "No project" : project.Name;
+            selectedProjectFolder = maker.GetSelectedProject();
+            SelectedProject = selectedProjectFolder is null ? "No project" : selectedProjectFolder.Name;
            
         }
 
         Maker maker;
+        FoldersAndDirectoriesMaker directoriesMaker;
+        EnvDTE.Project selectedProjectFolder;
         private string prjName;
         private string selectedProject;
         private string fileName;

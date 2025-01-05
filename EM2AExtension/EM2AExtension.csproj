@@ -46,6 +46,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Helpers\PathConstants.cs" />
+    <Compile Include="Logic\FoldersAndDirectoriesMaker.cs" />
     <Compile Include="Logic\Maker.cs" />
     <Compile Include="Logic\SolutionHelper.cs" />
     <Compile Include="Options\General.cs" />
