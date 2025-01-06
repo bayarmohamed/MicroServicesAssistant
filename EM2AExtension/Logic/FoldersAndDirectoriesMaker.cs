@@ -66,7 +66,7 @@ namespace EM2AExtension.Logic
             EnvDTE80.SolutionFolder folder = (EnvDTE80.SolutionFolder)solutionFolder.Object;
             folder.AddFromFile(projectFilePath);
         }
-        public void AddProjectToSubSolutionFolder(string parentFolderName, string subFolderName, string projectFilePath)
+        public Project AddProjectToSubSolutionFolder(string parentFolderName, string subFolderName, string projectFilePath)
         {
             Solution2 solution = (Solution2)dte.Solution;
 
@@ -105,7 +105,7 @@ namespace EM2AExtension.Logic
 
             // Step 3: Add the Project to the Sub-Folder
             EnvDTE80.SolutionFolder subSolutionFolder = (EnvDTE80.SolutionFolder)subFolder.Object;
-            subSolutionFolder.AddFromFile(projectFilePath);            
+            return subSolutionFolder.AddFromFile(projectFilePath);            
         }
 
     }

@@ -55,12 +55,12 @@ namespace EM2AExtension.Logic
             project.Save(csprojPath);
             return csprojPath;
         }
-        public Tuple<string,ProjectRootElement> CreateApiProject(string projectName)
+        public Tuple<string,ProjectRootElement> CreateApiProject(string folder, string projectName)
         {
             var projectFolder = projectName;
             projectName = $"{projectName}.csproj";
 
-            var projectPath = Path.Combine(Environment.CurrentDirectory, $"{projectFolder}");
+            var projectPath = Path.Combine(Environment.CurrentDirectory + $"\\{folder}\\" , $"{projectFolder}");
             Directory.CreateDirectory(projectPath);
             var csprojPath = Path.Combine(projectPath, $"{projectName}");
 
@@ -217,6 +217,7 @@ namespace EM2AExtension.Logic
 
             // Ajouter le fichier au projet
             project.ProjectItems.AddFromFile(filePath);
+            project.Save();
         }
         public void AddFileToFolderProject(Project project, string folder, string fileName, string content)
         {
