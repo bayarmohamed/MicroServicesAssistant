@@ -21,51 +21,6 @@ namespace EM2AExtension.Logic
         {
             dte = ServiceProvider.GlobalProvider.GetService(typeof(SDTE)) as EnvDTE80.DTE2;
         }
-        public void AddSolutionFolder(string folderName)
-        {
-            Solution2 solution = (Solution2)dte.Solution;
-
-            // Check if the solution is open
-            if (!solution.IsOpen)
-            {
-                Console.WriteLine("No solution is open.");
-                return;
-            }
-            if (!Directory.Exists(folderName))
-            {
-                Project solutionFolder = solution.AddSolutionFolder(folderName);
-            }
-        }
-
-       public void AttachProjectToFolder(EnvDTE.Project folderProject , string fullPrjPath)
-        {           
-            folderProject.ProjectItems.AddFromFile(fullPrjPath);
-        }
-        public void AddProjectToSolutionFolder(string solutionFolderName, string projectFilePath)
-        {
-            Solution2 solution = (Solution2)dte.Solution;
-
-            // Create or get solution folder
-            Project solutionFolder = null;
-            foreach (Project project in solution.Projects)
-            {
-                if (project.Kind == EnvDTE80.ProjectKinds.vsProjectKindSolutionFolder && project.Name == solutionFolderName)
-                {
-                    solutionFolder = project;
-                    break;
-                }
-            }
-
-            // Create solution folder if it doesn't exist
-            if (solutionFolder == null)
-            {
-                solutionFolder = solution.AddSolutionFolder(solutionFolderName);
-            }
-
-            // Add the new project to the solution folder
-            EnvDTE80.SolutionFolder folder = (EnvDTE80.SolutionFolder)solutionFolder.Object;
-            folder.AddFromFile(projectFilePath);
-        }
         public Project AddProjectToSubSolutionFolder(string parentFolderName, string subFolderName, string projectFilePath)
         {
             Solution2 solution = (Solution2)dte.Solution;
@@ -101,6 +56,8 @@ namespace EM2AExtension.Logic
             if (subFolder == null)
             {
                 subFolder = parentSolutionFolder.AddSolutionFolder(subFolderName);
+                var sdkFolder = (((EnvDTE80.SolutionFolder)subFolder.Object)).AddSolutionFolder("Sdks");
+                var deploymentFolder = (((EnvDTE80.SolutionFolder)subFolder.Object)).AddSolutionFolder("Deployment");
             }
 
             // Step 3: Add the Project to the Sub-Folder
