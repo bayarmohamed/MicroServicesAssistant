@@ -1,4 +1,5 @@
 ﻿using EM2AExtension.Logic;
+using EM2AExtension.Models;
 using EM2AExtension.Templates;
 using EM2AExtension.WpfCommands;
 using System.Collections.Generic;
@@ -37,16 +38,23 @@ namespace EM2AExtension.ViewModels
             if (!string.IsNullOrEmpty(PrjName))
             {
                 CreateApi();
+                CreateSdk();
             }
         }
         private void CreateApi()
         {           
            
             var project = maker.CreateApiProjectInSelectedFolder(prjName,"BE");
-            var projectInFolder = directoriesMaker.AddProjectToSubSolutionFolder("BE", prjName, project.Item1);
-            maker.AddFileToProject(projectInFolder, $"program.cs", CodeTemplates.programCode);
-            maker.AddFileToFolderProject(projectInFolder, "Controllers", $"MyController.cs", CodeTemplates.controllerCode);
+            projectInFolder = directoriesMaker.AddProjectToSubSolutionFolder("BE", prjName, project.Item1);
+            maker.AddFileToProject(projectInFolder.CreatedProject, $"program.cs", CodeTemplates.programCode);
+            maker.AddFileToFolderProject(projectInFolder.CreatedProject, "Controllers", $"MyController.cs", CodeTemplates.controllerCode);
             
+        }
+        private void CreateSdk()
+        {
+
+            var project = maker.CreateSDKLibraryProjectInSelectedFolder(prjName, "BE");
+            var result = directoriesMaker.AddSDKProjectToSubSolutionFolder(projectInFolder.CreatedSdkProject, project.Item1);
         }
         private bool CanExecuteAddNewProjectCommand(object obj)
         {
@@ -81,6 +89,7 @@ namespace EM2AExtension.ViewModels
         private string prjName;
         private string selectedProject;
         private string fileName;
+        private GeneratedProjectModel projectInFolder;
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)

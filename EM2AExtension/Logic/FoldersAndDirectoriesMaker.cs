@@ -1,4 +1,5 @@
 ﻿using EM2AExtension.Helpers;
+using EM2AExtension.Models;
 using EnvDTE;
 using EnvDTE80;
 using Microsoft.Build.Construction;
@@ -21,7 +22,7 @@ namespace EM2AExtension.Logic
         {
             dte = ServiceProvider.GlobalProvider.GetService(typeof(SDTE)) as EnvDTE80.DTE2;
         }
-        public Project AddProjectToSubSolutionFolder(string parentFolderName, string subFolderName, string projectFilePath)
+        public GeneratedProjectModel AddProjectToSubSolutionFolder(string parentFolderName, string subFolderName, string projectFilePath)
         {
             Solution2 solution = (Solution2)dte.Solution;
 
@@ -44,25 +45,28 @@ namespace EM2AExtension.Logic
             // Step 2: Find or Create Sub Solution Folder within Parent
             EnvDTE80.SolutionFolder parentSolutionFolder = (EnvDTE80.SolutionFolder)parentFolder.Object;
             Project subFolder = null;
-            //foreach (Project project in parentSolutionFolder.Parent.ProjectItems)
-            //{
-            //    if (project.Name == subFolderName)
-            //    {
-            //        subFolder = project;
-            //        break;
-            //    }
-            //}
 
+            Project sdkFolder = null;
+           
             if (subFolder == null)
             {
                 subFolder = parentSolutionFolder.AddSolutionFolder(subFolderName);
-                var sdkFolder = (((EnvDTE80.SolutionFolder)subFolder.Object)).AddSolutionFolder("Sdks");
+                sdkFolder = (((EnvDTE80.SolutionFolder)subFolder.Object)).AddSolutionFolder("Sdks");
                 var deploymentFolder = (((EnvDTE80.SolutionFolder)subFolder.Object)).AddSolutionFolder("Deployment");
             }
 
             // Step 3: Add the Project to the Sub-Folder
             EnvDTE80.SolutionFolder subSolutionFolder = (EnvDTE80.SolutionFolder)subFolder.Object;
-            return subSolutionFolder.AddFromFile(projectFilePath);            
+            return new GeneratedProjectModel
+            {
+
+                CreatedProject = subSolutionFolder.AddFromFile(projectFilePath),
+                CreatedSdkProject = sdkFolder
+            };
+        }
+        public Project AddSDKProjectToSubSolutionFolder(Project project, string projectFilePath)
+        {
+            return (((EnvDTE80.SolutionFolder)project.Object)).AddFromFile(projectFilePath);
         }
 
     }

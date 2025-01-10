@@ -89,7 +89,7 @@ namespace EM2AExtension.Logic
             Solution2 solution = (Solution2)dte.Solution;
             SelectedItem selectedItem = dte.SelectedItems.Item(1);
 
-            var projectFolder = selectedFolder + @"\"+ projectName;
+            var projectFolder = selectedFolder + @"\"+ projectName + @"\" + projectName + ".Host";
             projectName = $"{projectName}.csproj";
 
             var projectPath = Path.Combine(Environment.CurrentDirectory, $"{projectFolder}");
@@ -112,10 +112,41 @@ namespace EM2AExtension.Logic
             itemGroup.AddItem("PackageReference", "Newtonsoft.Json", new[] { new KeyValuePair<string, string>("Version", "13.0.3") });
             itemGroup.AddItem("PackageReference", "Swashbuckle.AspNetCore", new[] { new KeyValuePair<string, string>("Version", "6.6.2") });
             itemGroup.AddItem("PackageReference", "NSwag.AspNetCore", new[] { new KeyValuePair<string, string>("Version", "14.2.0") });
+            itemGroup.AddItem("PackageReference", "NSwag.MSBuild", new[] { new KeyValuePair<string, string>("Version", "14.2.0") });
             // Save the .csproj file
             project.Save(csprojPath);
             return Tuple.Create(csprojPath, project);
         }
+        public Tuple<string, ProjectRootElement> CreateSDKLibraryProjectInSelectedFolder(string projectName, string selectedFolder)
+        {
+            Solution2 solution = (Solution2)dte.Solution;
+            SelectedItem selectedItem = dte.SelectedItems.Item(1);
+
+            var projectFolder = selectedFolder + @"\" + projectName + @"\Sdks\" + projectName + ".SDK";
+            projectName = $"{projectName}.SDK.csproj";
+
+            var projectPath = Path.Combine(Environment.CurrentDirectory, $"{projectFolder}");
+            Directory.CreateDirectory(projectPath);
+            var csprojPath = Path.Combine(projectPath, $"{projectName}");
+
+            // Create a new project root
+            ProjectRootElement project = ProjectRootElement.Create();
+
+            // Set the project SDK
+            project.Sdk = "Microsoft.NET.Sdk";
+
+            // Add properties (e.g., target framework)
+            var propertyGroup = project.AddPropertyGroup();
+            propertyGroup.AddProperty("TargetFramework", "netstandard2.0");
+
+            // Add an example package reference
+            var itemGroup = project.AddItemGroup();
+            itemGroup.AddItem("PackageReference", "Newtonsoft.Json", new[] { new KeyValuePair<string, string>("Version", "13.0.3") });
+            // Save the .csproj file
+            project.Save(csprojPath);
+            return Tuple.Create(csprojPath, project);
+        }
+
         public void AddLaunchSettings(Project project)
         {
             var projectPath = Path.Combine(Environment.CurrentDirectory, $"{project.Name}");
