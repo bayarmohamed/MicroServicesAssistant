@@ -66,5 +66,25 @@ public class HomeController : ControllerBase
     public IActionResult Get() => Ok(""Hello from ASP.NET Core Web API!"");
 }
 ";
+        public static string NswagGenCode = @"
+{
+  ""runtime"": ""Net90"",
+  ""documentGenerator"": {
+    ""aspNetCoreToOpenApi"": {
+      ""project"": ""../../../Manager.Host/Manager.csproj"",
+      ""noBuild"":true
     }
+  },
+  ""codeGenerators"": {
+    ""openApiToCSharpClient"": {
+      ""namespace"": ""Manager.Interface.Client"",
+      ""output"": ""ManagerSDKClient.cs"",
+      ""generateClientInterfaces"": true
+    }
+  }
+}
+";
+    }
+
+
 }
