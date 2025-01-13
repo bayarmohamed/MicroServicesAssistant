@@ -47,14 +47,14 @@ namespace EM2AExtension.ViewModels
             var project = maker.CreateApiProjectInSelectedFolder(prjName,"BE");
             projectInFolder = directoriesMaker.AddProjectToSubSolutionFolder("BE", prjName, project.Item1);
             maker.AddFileToProject(projectInFolder.CreatedProject, $"program.cs", CodeTemplates.programCode);
-            maker.AddFileToFolderProject(projectInFolder.CreatedProject, "Controllers", $"MyController.cs", CodeTemplates.controllerCode);
-            
+            maker.AddFileToFolderProject(projectInFolder.CreatedProject, "Controllers", $"MyController.cs", CodeTemplates.controllerCode);           
         }
         private void CreateSdk()
         {
 
             var project = maker.CreateSDKLibraryProjectInSelectedFolder(prjName, "BE");
             var result = directoriesMaker.AddSDKProjectToSubSolutionFolder(projectInFolder.CreatedSdkProject, project.Item1);
+            maker.AddFileToFolderProject(result, "Generator", $"interface.nswag", CodeTemplates.NswagGenCode);
         }
         private bool CanExecuteAddNewProjectCommand(object obj)
         {

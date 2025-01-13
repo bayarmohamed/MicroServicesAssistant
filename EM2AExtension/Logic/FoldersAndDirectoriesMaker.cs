@@ -47,11 +47,14 @@ namespace EM2AExtension.Logic
             Project subFolder = null;
 
             Project sdkFolder = null;
-           
+            Project sdkGeneratorFolder = null;
+
+
             if (subFolder == null)
             {
                 subFolder = parentSolutionFolder.AddSolutionFolder(subFolderName);
                 sdkFolder = (((EnvDTE80.SolutionFolder)subFolder.Object)).AddSolutionFolder("Sdks");
+                //sdkGeneratorFolder = (((EnvDTE80.SolutionFolder)sdkFolder.Object)).AddSolutionFolder("Generator");
                 var deploymentFolder = (((EnvDTE80.SolutionFolder)subFolder.Object)).AddSolutionFolder("Deployment");
             }
 
@@ -61,12 +64,14 @@ namespace EM2AExtension.Logic
             {
 
                 CreatedProject = subSolutionFolder.AddFromFile(projectFilePath),
-                CreatedSdkProject = sdkFolder
+                CreatedSdkProject = sdkFolder,
+                SDKGeneratorFolder = sdkGeneratorFolder
             };
         }
         public Project AddSDKProjectToSubSolutionFolder(Project project, string projectFilePath)
         {
-            return (((EnvDTE80.SolutionFolder)project.Object)).AddFromFile(projectFilePath);
+            var result = (((EnvDTE80.SolutionFolder)project.Object)).AddFromFile(projectFilePath);
+            return result;
         }
 
     }

@@ -11,6 +11,7 @@ namespace EM2AExtension.Models
     {
         public EnvDTE.Project CreatedProject { get; set; }
         public EnvDTE.Project CreatedSdkProject { get; set; }
+        public EnvDTE.Project SDKGeneratorFolder { get; set; }        
 
     }
 }
