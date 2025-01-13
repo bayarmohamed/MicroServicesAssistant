@@ -47,7 +47,7 @@ namespace EM2AExtension.ViewModels
             var project = maker.CreateApiProjectInSelectedFolder(prjName,"BE");
             projectInFolder = directoriesMaker.AddProjectToSubSolutionFolder("BE", prjName, project.Item1);
             maker.AddFileToProject(projectInFolder.CreatedProject, $"program.cs", CodeTemplates.programCode);
-            maker.AddFileToFolderProject(projectInFolder.CreatedProject, "Controllers", $"MyController.cs", CodeTemplates.controllerCode);           
+            maker.AddFileToFolderProject(projectInFolder.CreatedProject, "Controllers", $"EnvironmentController.cs", CodeTemplates.controllerCode);           
         }
         private void CreateSdk()
         {

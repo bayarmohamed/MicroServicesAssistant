@@ -121,6 +121,8 @@ namespace EM2AExtension.Logic
 
             // Create the Exec task for the target
             var execTask = project.CreateTaskElement("Exec");
+            execTask.SetParameter("EnvironmentVariables",
+               @"ASPNETCORE_ENVIRONMENT=Development;NSwag=true");
             execTask.SetParameter("Command",
                 @"$(NSwagExe_Net90) run ..\Sdks\" + $"{originalPrjName}" +@".sdk\Generator\interface.nswag /variables:Configuration=$(Configuration)");
 
