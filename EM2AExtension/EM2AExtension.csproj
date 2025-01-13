@@ -60,6 +60,7 @@
       <DependentUpon>source.extension.vsixmanifest</DependentUpon>
     </Compile>
     <Compile Include="Templates\CodeTemplates.cs" />
+    <Compile Include="Templates\GeneratorTemplate.cs" />
     <Compile Include="ToolWindows\Wizard.xaml.cs">
       <DependentUpon>Wizard.xaml</DependentUpon>
     </Compile>

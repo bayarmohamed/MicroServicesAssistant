@@ -1,14 +1,16 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace EM2AExtension.Templates
 {
     public static class CodeTemplates
     {
-        public static string ConsoleTemplate =        
+        public static string ConsoleTemplate =
              @"using System;
 
 namespace YourNamespace
@@ -21,7 +23,7 @@ namespace YourNamespace
         }
     }
 }";
-        
+
 
         public static string programCode = @"
 
@@ -55,7 +57,7 @@ app.Run();
 
 ";
 
-       public static string controllerCode = @"
+        public static string controllerCode = @"
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
@@ -66,7 +68,7 @@ public class HomeController : ControllerBase
     public IActionResult Get() => Ok(""Hello from ASP.NET Core Web API!"");
 }
 ";
-        public static string NswagGenCode = @"
+        public static string NswagGenCode => @"
 {
   ""runtime"": ""Net90"",
   ""documentGenerator"": {
@@ -84,7 +86,35 @@ public class HomeController : ControllerBase
   }
 }
 ";
+
+        public static string NswagJsonGenCode(string prjName)
+        {
+            var content = new Rootobject
+            {
+                runtime = "Net90",
+                documentGenerator = new Documentgenerator
+                {
+                    aspNetCoreToOpenApi = new Aspnetcoretoopenapi
+                    {
+                        noBuild = true,
+                        project = $"../../../{prjName}.Host/{prjName}.csproj"
+                    }
+                },
+                codeGenerators = new Codegenerators
+                {
+                    openApiToCSharpClient = new Openapitocsharpclient
+                    {
+                        _namespace = $"{prjName}.Interface.Client",
+                        generateClientInterfaces = true,
+                        output = $"../{prjName}InterfaceSDKClient.cs"
+                    }
+                }
+            };
+            return System.Text.Json.JsonSerializer.Serialize(content,new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase, WriteIndented = true});
+        }
     }
 
+
+   
 
 }
