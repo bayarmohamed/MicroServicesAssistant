@@ -45,7 +45,7 @@ namespace EM2AExtension.Logic
             // Add properties (e.g., target framework)
             var propertyGroup = project.AddPropertyGroup();
             propertyGroup.AddProperty("OutputType", "Exe");
-            propertyGroup.AddProperty("TargetFramework", "net6.0");
+            propertyGroup.AddProperty("TargetFramework", "net9.0");
 
             // Add an example package reference
             var itemGroup = project.AddItemGroup();
@@ -86,10 +86,11 @@ namespace EM2AExtension.Logic
         }
         public Tuple<string, ProjectRootElement> CreateApiProjectInSelectedFolder(string projectName, string selectedFolder)
         {
+            var originalPrjName = projectName;
             Solution2 solution = (Solution2)dte.Solution;
             SelectedItem selectedItem = dte.SelectedItems.Item(1);
 
-            var projectFolder = selectedFolder + @"\"+ projectName + @"\" + projectName + ".Host";
+            var projectFolder = selectedFolder + @"\" + projectName + @"\" + projectName + ".Host";
             projectName = $"{projectName}.csproj";
 
             var projectPath = Path.Combine(Environment.CurrentDirectory, $"{projectFolder}");
@@ -105,7 +106,7 @@ namespace EM2AExtension.Logic
             // Add properties (e.g., target framework)
             var propertyGroup = project.AddPropertyGroup();
             propertyGroup.AddProperty("OutputType", "Exe");
-            propertyGroup.AddProperty("TargetFramework", "net8.0");
+            propertyGroup.AddProperty("TargetFramework", "net9.0");
 
             // Add an example package reference
             var itemGroup = project.AddItemGroup();
@@ -113,6 +114,19 @@ namespace EM2AExtension.Logic
             itemGroup.AddItem("PackageReference", "Swashbuckle.AspNetCore", new[] { new KeyValuePair<string, string>("Version", "6.6.2") });
             itemGroup.AddItem("PackageReference", "NSwag.AspNetCore", new[] { new KeyValuePair<string, string>("Version", "14.2.0") });
             itemGroup.AddItem("PackageReference", "NSwag.MSBuild", new[] { new KeyValuePair<string, string>("Version", "14.2.0") });
+            //Add MSBUILD Nswag Target
+            var newTarget = project.CreateTargetElement("NSwag");
+
+            newTarget.AfterTargets = "PostBuildEvent";
+
+            // Create the Exec task for the target
+            var execTask = project.CreateTaskElement("Exec");
+            execTask.SetParameter("Command",
+                @"$(NSwagExe_Net90) run ..\Sdks\" + $"{originalPrjName}" +@".sdk\Generator\interface.nswag /variables:Configuration=$(Configuration)");
+
+            // Append the Exec task to the Target
+            project.AppendChild(newTarget);
+            newTarget.AppendChild(execTask);
             // Save the .csproj file
             project.Save(csprojPath);
             return Tuple.Create(csprojPath, project);
