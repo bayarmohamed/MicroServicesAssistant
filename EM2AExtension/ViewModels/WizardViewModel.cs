@@ -39,6 +39,7 @@ namespace EM2AExtension.ViewModels
             {
                 CreateApi();
                 CreateSdk();
+                //CreateInterfaceLibrary();
             }
         }
         private void CreateApi()
@@ -46,6 +47,7 @@ namespace EM2AExtension.ViewModels
            
             var project = maker.CreateApiProjectInSelectedFolder(prjName,"BE");
             projectInFolder = directoriesMaker.AddProjectToSubSolutionFolder("BE", prjName, project.Item1);
+            
             maker.AddFileToProject(projectInFolder.CreatedProject, $"program.cs", CodeTemplates.programCode);
             maker.AddFileToFolderProject(projectInFolder.CreatedProject, "Controllers", $"EnvironmentController.cs", CodeTemplates.controllerCode);           
         }
@@ -56,6 +58,15 @@ namespace EM2AExtension.ViewModels
             var result = directoriesMaker.AddSDKProjectToSubSolutionFolder(projectInFolder.CreatedSdkProject, project.Item1);
             maker.AddFileToFolderProject(result, "Generator", $"interface.nswag", CodeTemplates.NswagJsonGenCode(prjName));
         }
+        private void CreateInterfaceLibrary()
+        {
+
+            var project = maker.CreateInterfaceProjectInSelectedFolder($"{prjName}", "BE");
+            //var result = directoriesMaker.AddProjectToSubSolutionFolder2("BE", $"{prjName}", project.Item1);
+            directoriesMaker.AddProjectToSelectedFolder(selectedProjectFolder, project.Item1);
+           // projectInFolder = directoriesMaker.AddProjectToSubSolutionFolder3("BE", prjName, project.Item1);
+
+        }
         private bool CanExecuteAddNewProjectCommand(object obj)
         {
             return true;
@@ -64,8 +75,9 @@ namespace EM2AExtension.ViewModels
         {
             if (!string.IsNullOrEmpty(PrjName))
             {
-                var project =  maker.CreateProject(prjName);
-                maker.AddProjectToSolution(project);               
+                //var project =  maker.CreateProject(prjName);
+                //maker.AddProjectToSolution(project);
+                CreateInterfaceLibrary();
             }           
         }
         private bool CanExecuteCommand(object obj)
