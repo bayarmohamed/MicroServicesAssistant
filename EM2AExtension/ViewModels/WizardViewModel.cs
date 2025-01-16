@@ -19,6 +19,8 @@ namespace EM2AExtension.ViewModels
         public string PrjName { get => prjName; set { prjName = value; OnPropertyChanged(); } }
         public string InterfaceName { get => interfaceName; set { interfaceName = value; OnPropertyChanged(); } }
         public string FacadeName { get => facadeName; set { facadeName = value; OnPropertyChanged(); } }
+        public string BLName { get => bLName; set { bLName = value; OnPropertyChanged(); } }
+        public string DLName { get => dLName; set { dLName = value; OnPropertyChanged(); } }
         public string SelectedProject { get => selectedProject; set { selectedProject = value; OnPropertyChanged(); } }
         public string FileName { get => fileName; set { fileName = value; OnPropertyChanged(); } }
         public List<string> Projects { get; set; } = new List<string>();
@@ -53,7 +55,8 @@ namespace EM2AExtension.ViewModels
 
         private void AddBLCommand(object obj)
         {
-            throw new NotImplementedException();
+            CreateBLLibrary();
+            CreateAbstractBLLibrary();
         }
 
         private bool CanExecuteAddFacadeCommand(object obj)
@@ -97,6 +100,16 @@ namespace EM2AExtension.ViewModels
             var project = maker.CreateFacadeProjectInSelectedFolder($"{FacadeName}", "BE");
             directoriesMaker.AddProjectToSelectedFolder(selectedProjectFolder, project.Item1);
         }
+        private void CreateBLLibrary()
+        {
+            var project = maker.CreateBLInSelectedFolder($"{BLName}", "BE");
+            directoriesMaker.AddProjectToSelectedFolder(selectedProjectFolder, project.Item1);
+        }
+        private void CreateAbstractBLLibrary()
+        {
+            var project = maker.CreateAbstractionBLInSelectedFolder($"{BLName}", "BE");
+            directoriesMaker.AddProjectToSelectedFolder(selectedProjectFolder, project.Item1);
+        }
         private bool CanExecuteAddNewMicroserviceCommand(object obj)
         {
             return true;
@@ -136,6 +149,8 @@ namespace EM2AExtension.ViewModels
         private GeneratedProjectModel projectInFolder;
         private string interfaceName;
         private string facadeName;
+        private string bLName;
+        private string dLName;
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
