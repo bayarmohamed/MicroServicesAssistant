@@ -45,7 +45,7 @@ namespace EM2AExtension.ViewModels
 
         private void AddDLCommand(object obj)
         {
-            throw new NotImplementedException();
+            CreateDomainLibrary();
         }
 
         private bool CanExecuteBLCommand(object obj)
@@ -108,6 +108,11 @@ namespace EM2AExtension.ViewModels
         private void CreateAbstractBLLibrary()
         {
             var project = maker.CreateAbstractionBLInSelectedFolder($"{BLName}", "BE");
+            directoriesMaker.AddProjectToSelectedFolder(selectedProjectFolder, project.Item1);
+        }
+        private void CreateDomainLibrary()
+        {
+            var project = maker.CreateDomainInSelectedFolder($"{DLName}", "BE");
             directoriesMaker.AddProjectToSelectedFolder(selectedProjectFolder, project.Item1);
         }
         private bool CanExecuteAddNewMicroserviceCommand(object obj)
