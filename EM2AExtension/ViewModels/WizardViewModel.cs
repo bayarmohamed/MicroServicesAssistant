@@ -11,73 +11,106 @@ namespace EM2AExtension.ViewModels
     public class WizardViewModel:INotifyPropertyChanged
     {
         public ICommand CmdAddFile { get; }
-        public ICommand CmdAddProject { get; }
-        public ICommand CmdAddApiTemplateProject { get; }
+        public ICommand CmdAddMicroservice { get; }
+        public ICommand CmdAddInterface { get; }
+        public ICommand CmdAddFacade { get; }
+        public ICommand CmdAddBL { get; }
+        public ICommand CmdAddDL { get; }
         public string PrjName { get => prjName; set { prjName = value; OnPropertyChanged(); } }
+        public string InterfaceName { get => interfaceName; set { interfaceName = value; OnPropertyChanged(); } }
+        public string FacadeName { get => facadeName; set { facadeName = value; OnPropertyChanged(); } }
         public string SelectedProject { get => selectedProject; set { selectedProject = value; OnPropertyChanged(); } }
         public string FileName { get => fileName; set { fileName = value; OnPropertyChanged(); } }
         public List<string> Projects { get; set; } = new List<string>();
         public WizardViewModel()
         {
             CmdAddFile = new RelayCommand(ExecuteCommand, CanExecuteCommand);
-            CmdAddProject = new RelayCommand( (obj) =>  AddNewProjectCommand(obj), CanExecuteAddNewProjectCommand);
-            CmdAddApiTemplateProject = new RelayCommand( (obj) =>  AddApiProjectFromTemplateCommand(obj), CanExecuteAddApiProjectFromTemplateCommand);
+            CmdAddMicroservice = new RelayCommand( (obj) =>  AddNewMicroserviceCommand(obj), CanExecuteAddNewMicroserviceCommand);
+            CmdAddInterface = new RelayCommand( (obj) =>  AddInterfaceCommand(obj), CanExecuteAddInterfaceCommand);
+            CmdAddFacade = new RelayCommand((obj) => AddFacadeCommand(obj), CanExecuteAddFacadeCommand);
+            CmdAddBL = new RelayCommand((obj) => AddBLCommand(obj), CanExecuteBLCommand);
+            CmdAddDL = new RelayCommand((obj) => AddDLCommand(obj), CanExecuteAddDLCommand);
+
             maker = new Maker();
             directoriesMaker = new FoldersAndDirectoriesMaker();
             GetProjectsNames();
         }
-        private bool CanExecuteAddApiProjectFromTemplateCommand(object obj)
+
+        private bool CanExecuteAddDLCommand(object obj)
         {
             return true;
         }
-        private  void AddApiProjectFromTemplateCommand(object obj)
+
+        private void AddDLCommand(object obj)
         {
-            //maker.AddSubSubFolder("BE", "Core", "Services");
-            //maker.AddSolutionFolder("BE");
-            //maker.AddSolutionFolder("FE");            
-            if (!string.IsNullOrEmpty(PrjName))
-            {
-                CreateApi();
-                CreateSdk();
-                //CreateInterfaceLibrary();
-            }
+            throw new NotImplementedException();
+        }
+
+        private bool CanExecuteBLCommand(object obj)
+        {
+            return true;
+        }
+
+        private void AddBLCommand(object obj)
+        {
+            throw new NotImplementedException();
+        }
+
+        private bool CanExecuteAddFacadeCommand(object obj)
+        {
+            return true;
+        }
+
+        private void AddFacadeCommand(object obj)
+        {
+            CreateFacadeLibrary();
+        }
+
+        private bool CanExecuteAddInterfaceCommand(object obj)
+        {
+            return true;
+        }
+        private  void AddInterfaceCommand(object obj)
+        {
+            CreateInterfaceLibrary();
         }
         private void CreateApi()
-        {           
-           
+        {  
             var project = maker.CreateApiProjectInSelectedFolder(prjName,"BE");
-            projectInFolder = directoriesMaker.AddProjectToSubSolutionFolder("BE", prjName, project.Item1);
-            
+            projectInFolder = directoriesMaker.AddProjectToSubSolutionFolder("BE", prjName, project.Item1);            
             maker.AddFileToProject(projectInFolder.CreatedProject, $"program.cs", CodeTemplates.programCode);
             maker.AddFileToFolderProject(projectInFolder.CreatedProject, "Controllers", $"EnvironmentController.cs", CodeTemplates.controllerCode);           
         }
         private void CreateSdk()
         {
-
             var project = maker.CreateSDKLibraryProjectInSelectedFolder(prjName, "BE");
             var result = directoriesMaker.AddSDKProjectToSubSolutionFolder(projectInFolder.CreatedSdkProject, project.Item1);
             maker.AddFileToFolderProject(result, "Generator", $"interface.nswag", CodeTemplates.NswagJsonGenCode(prjName));
         }
         private void CreateInterfaceLibrary()
         {
-
-            var project = maker.CreateInterfaceProjectInSelectedFolder($"{prjName}", "BE");
-            //var result = directoriesMaker.AddProjectToSubSolutionFolder2("BE", $"{prjName}", project.Item1);
-            directoriesMaker.AddProjectToSelectedFolder(selectedProjectFolder, project.Item1);
-           // projectInFolder = directoriesMaker.AddProjectToSubSolutionFolder3("BE", prjName, project.Item1);
-
+            var project = maker.CreateInterfaceProjectInSelectedFolder($"{InterfaceName}", "BE");
+            directoriesMaker.AddProjectToSelectedFolder(selectedProjectFolder, project.Item1);           
         }
-        private bool CanExecuteAddNewProjectCommand(object obj)
+        private void CreateFacadeLibrary()
+        {
+            var project = maker.CreateFacadeProjectInSelectedFolder($"{FacadeName}", "BE");
+            directoriesMaker.AddProjectToSelectedFolder(selectedProjectFolder, project.Item1);
+        }
+        private bool CanExecuteAddNewMicroserviceCommand(object obj)
         {
             return true;
         }
-        private  void AddNewProjectCommand(object obj)
+        private  void AddNewMicroserviceCommand(object obj)
         {
             if (!string.IsNullOrEmpty(PrjName))
             {
-                //var project =  maker.CreateProject(prjName);
-                //maker.AddProjectToSolution(project);
-                CreateInterfaceLibrary();
+                if (!string.IsNullOrEmpty(PrjName))
+                {
+                    CreateApi();
+                    CreateSdk();
+                    //CreateInterfaceLibrary();
+                }
             }           
         }
         private bool CanExecuteCommand(object obj)
@@ -91,8 +124,7 @@ namespace EM2AExtension.ViewModels
         private void GetProjectsNames()
         {
             selectedProjectFolder = maker.GetSelectedProject();
-            SelectedProject = selectedProjectFolder is null ? "No project" : selectedProjectFolder.Name;
-           
+            SelectedProject = selectedProjectFolder is null ? "No project" : selectedProjectFolder.Name;           
         }
 
         Maker maker;
@@ -102,6 +134,8 @@ namespace EM2AExtension.ViewModels
         private string selectedProject;
         private string fileName;
         private GeneratedProjectModel projectInFolder;
+        private string interfaceName;
+        private string facadeName;
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
