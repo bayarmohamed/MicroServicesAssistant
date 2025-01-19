@@ -120,15 +120,25 @@ namespace EM2AExtension.Logic
             newTarget.AfterTargets = "PostBuildEvent";
 
             // Create the Exec task for the target
-            var execTask = project.CreateTaskElement("Exec");
-            execTask.SetParameter("EnvironmentVariables",
+            var execTaskInterface = project.CreateTaskElement("Exec");
+            execTaskInterface.SetParameter("EnvironmentVariables",
                @"ASPNETCORE_ENVIRONMENT=Development;NSwag=true");
-            execTask.SetParameter("Command",
-                @"$(NSwagExe_Net90) run ..\Sdks\" + $"{originalPrjName}" +@".sdk\Generator\interface.nswag /variables:Configuration=$(Configuration)");
-
+            execTaskInterface.SetParameter("Command",
+                @"$(NSwagExe_Net90) run ..\Sdks\" + $"{originalPrjName}" +@".sdk\Generator\interface.nswag /variables:Configuration=$(Configuration)");            
             // Append the Exec task to the Target
             project.AppendChild(newTarget);
-            newTarget.AppendChild(execTask);
+            
+            newTarget.AppendChild(execTaskInterface);
+
+            var execTaskFacade = project.CreateTaskElement("Exec");
+            execTaskFacade.SetParameter("EnvironmentVariables",
+               @"ASPNETCORE_ENVIRONMENT=Development;NSwag=true");
+            execTaskFacade.SetParameter("Command",
+                @"$(NSwagExe_Net90) run ..\Sdks\" + $"{originalPrjName}" + @".sdk\Generator\facade.nswag /variables:Configuration=$(Configuration)");
+            // Append the Exec task to the Target
+            
+            newTarget.AppendChild(execTaskFacade);
+
             // Save the .csproj file
             project.Save(csprojPath);
             return Tuple.Create(csprojPath, project);
@@ -461,7 +471,17 @@ namespace EM2AExtension.Logic
             }
 
             // 2. Add the folder to the project (appears in Solution Explorer)
-            ProjectItem folderItem = project.ProjectItems.AddFolder($"{folder}");
+            ProjectItem folderItem = project.ProjectItems
+                                            .Cast<ProjectItem>()
+                                            .FirstOrDefault(item => item.Name.Equals(folder, StringComparison.OrdinalIgnoreCase));
+
+            if (folderItem == null)
+            {
+                // Folder doesn't exist; create it
+                folderItem = project.ProjectItems.AddFolder(folder);
+                
+            }
+           // ProjectItem folderItem = project.ProjectItems.AddFolder($"{folder}");
 
             // Créer et écrire le contenu du fichier
             System.IO.File.WriteAllText(filePath, content);

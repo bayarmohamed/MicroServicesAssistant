@@ -88,7 +88,8 @@ namespace EM2AExtension.ViewModels
         {
             var project = maker.CreateSDKLibraryProjectInSelectedFolder(prjName, "BE");
             var result = directoriesMaker.AddSDKProjectToSubSolutionFolder(projectInFolder.CreatedSdkProject, project.Item1);
-            maker.AddFileToFolderProject(result, "Generator", $"interface.nswag", CodeTemplates.NswagJsonGenCode(prjName));
+            maker.AddFileToFolderProject(result, "Generator", $"interface.nswag", CodeTemplates.NswagJsonGenCode(prjName,"Interface"));
+            maker.AddFileToFolderProject(result, "Generator", $"facade.nswag", CodeTemplates.NswagJsonGenCode(prjName,"Facade"));
         }
         private void CreateInterfaceLibrary()
         {

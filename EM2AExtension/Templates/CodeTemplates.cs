@@ -62,7 +62,7 @@ public class HomeController : ControllerBase
     public IActionResult Get() => Ok(""Hello from ASP.NET Core Web API!"");
 }
 ";
-        public static string NswagJsonGenCode(string prjName)
+        public static string NswagJsonGenCode(string prjName, string level)
         {
             var content = new Rootobject
             {
@@ -79,9 +79,9 @@ public class HomeController : ControllerBase
                 {
                     openApiToCSharpClient = new Openapitocsharpclient
                     {
-                        _namespace = $"{prjName}.Interface.Client",
+                        @namespace = $"{prjName}.{level}.Client",
                         generateClientInterfaces = true,
-                        output = $"../{prjName}InterfaceSDKClient.cs"
+                        output = $"../{prjName}{level}SDKClient.cs"
                     }
                 }
             };

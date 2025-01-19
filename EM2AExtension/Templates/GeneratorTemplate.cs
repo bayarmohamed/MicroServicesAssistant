@@ -31,7 +31,7 @@ namespace EM2AExtension.Templates
 
     public class Openapitocsharpclient
     {
-        public string _namespace { get; set; }
+        public string @namespace { get; set; }
         public string output { get; set; }
         public bool generateClientInterfaces { get; set; }
     }
