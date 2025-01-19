@@ -307,10 +307,9 @@ namespace EM2AExtension.Logic
             // Add an example package reference
             var itemGroup = project.AddItemGroup();
             itemGroup.AddItem("PackageReference", "Newtonsoft.Json", new[] { new KeyValuePair<string, string>("Version", "13.0.3") });
-            itemGroup.AddItem("PackageReference", "Swashbuckle.AspNetCore", new[] { new KeyValuePair<string, string>("Version", "6.6.2") });
-            itemGroup.AddItem("PackageReference", "NSwag.AspNetCore", new[] { new KeyValuePair<string, string>("Version", "14.2.0") });
-            itemGroup.AddItem("PackageReference", "NSwag.MSBuild", new[] { new KeyValuePair<string, string>("Version", "14.2.0") });
-
+            itemGroup.AddItem("PackageReference", "Microsoft.EntityFrameworkCore", new[] { new KeyValuePair<string, string>("Version", "8.0.4") });
+            itemGroup.AddItem("PackageReference", "Microsoft.EntityFrameworkCore.SqlServer", new[] { new KeyValuePair<string, string>("Version", "8.0.4") });
+            itemGroup.AddItem("PackageReference", "Microsoft.EntityFrameworkCore.Tools", new[] { new KeyValuePair<string, string>("Version", "8.0.4") });
 
             // Save the .csproj file
             project.Save(csprojPath);
@@ -343,9 +342,9 @@ namespace EM2AExtension.Logic
             // Add an example package reference
             var itemGroup = project.AddItemGroup();
             itemGroup.AddItem("PackageReference", "Newtonsoft.Json", new[] { new KeyValuePair<string, string>("Version", "13.0.3") });
-            itemGroup.AddItem("PackageReference", "Swashbuckle.AspNetCore", new[] { new KeyValuePair<string, string>("Version", "6.6.2") });
-            itemGroup.AddItem("PackageReference", "NSwag.AspNetCore", new[] { new KeyValuePair<string, string>("Version", "14.2.0") });
-            itemGroup.AddItem("PackageReference", "NSwag.MSBuild", new[] { new KeyValuePair<string, string>("Version", "14.2.0") });
+            itemGroup.AddItem("PackageReference", "Microsoft.EntityFrameworkCore", new[] { new KeyValuePair<string, string>("Version", "8.0.4") });
+            itemGroup.AddItem("PackageReference", "Microsoft.EntityFrameworkCore.SqlServer", new[] { new KeyValuePair<string, string>("Version", "8.0.4") });
+            itemGroup.AddItem("PackageReference", "Microsoft.EntityFrameworkCore.Tools", new[] { new KeyValuePair<string, string>("Version", "8.0.4") });
 
 
             // Save the .csproj file

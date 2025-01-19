@@ -114,7 +114,9 @@ namespace EM2AExtension.ViewModels
         private void CreateDomainLibrary()
         {
             var project = maker.CreateDomainInSelectedFolder($"{DLName}", "BE");
-            directoriesMaker.AddProjectToSelectedFolder(selectedProjectFolder, project.Item1);
+            var createdprj = directoriesMaker.AddProjectToSelectedFolder(selectedProjectFolder, project.Item1);
+            maker.AddFileToFolderProject(createdprj, "DBFactory", $"{DLName}DBContextFactory.cs", CodeTemplates.DbContextFactory(DLName));
+            maker.AddFileToFolderProject(createdprj, "DataBaseContext", $"{DLName}DBContext.cs", CodeTemplates.DbContext(DLName));
         }
         private bool CanExecuteAddNewMicroserviceCommand(object obj)
         {

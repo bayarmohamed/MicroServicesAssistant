@@ -62,6 +62,41 @@ public class HomeController : ControllerBase
     public IActionResult Get() => Ok(""Hello from ASP.NET Core Web API!"");
 }
 ";
+        public static string DbContextFactory(string DB) => @"
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
+using "+ DB +@".Domain.DataBaseContext;
+
+namespace "+ DB + @".Domain.DBFactory;
+
+ public class " + DB + @"ContextFactory : IDesignTimeDbContextFactory<" + DB + @"DBContext>
+    {
+        public " + DB + @"DBContext CreateDbContext(string[] args)
+        {
+            var optionsBuilder = new DbContextOptionsBuilder<" + DB + @"DBContext>();
+            optionsBuilder.UseSqlServer(""Server=.\\SQLEXPRESS;Database=" + DB + @";Trusted_Connection=true;Encrypt=false;"");
+
+            return new " + DB + @"DBContext(optionsBuilder.Options);
+        }
+    }
+";
+        public static string DbContext(string DB) => @"
+using Microsoft.EntityFrameworkCore;
+
+
+namespace "+ DB +@".Domain.DataBaseContext
+{
+    public class " + DB +@"DBContext : DbContext
+    {
+        public "+ DB + @"DBContext(DbContextOptions<"+ DB + @"DBContext> options)
+        : base(options) { }
+
+       //DBSETS here
+
+    }
+}
+
+";
         public static string NswagJsonGenCode(string prjName, string level)
         {
             var content = new Rootobject
