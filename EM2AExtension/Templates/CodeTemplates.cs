@@ -40,13 +40,13 @@ builder.Services.AddOpenApiDocument(config =>
 {
     config.DocumentName = ""facade"";
     config.ApiGroupNames = new[] { ""facade"" };
-    config.PostProcess = postProcess => { postProcess.Info.Title = ""Facade contracts are used for inter services communication""; };
+    config.PostProcess = postProcess => { postProcess.Info.Title = ""Facade contracts are used for inter-services communication""; };
 });
 builder.Services.AddOpenApiDocument(config =>
 {
     config.DocumentName = ""interface"";
     config.ApiGroupNames = new[] { ""interface"" };
-    config.PostProcess = postProcess => { postProcess.Info.Title = ""Interfec contracts are used for external explosing services communication""; };
+    config.PostProcess = postProcess => { postProcess.Info.Title = ""Interface contracts are used for external services communication""; };
 });
 
 var app = builder.Build();

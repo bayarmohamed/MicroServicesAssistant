@@ -1,17 +1,13 @@
-﻿using EM2AExtension.Helpers;
-using EM2AExtension.Models;
-using EnvDTE;
+﻿using EnvDTE;
 using EnvDTE80;
 using Microsoft.Build.Construction;
-using Microsoft.VisualStudio.ProjectSystem.VS;
+using Microsoft.VisualStudio.PlatformUI.OleComponentSupport;
 using Microsoft.VisualStudio.Shell.Interop;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
-using VSLangProj;
 using Project = EnvDTE.Project;
 
 namespace EM2AExtension.Logic
@@ -477,18 +473,24 @@ namespace EM2AExtension.Logic
 
             if (folderItem == null)
             {
-                // Folder doesn't exist; create it
-                folderItem = project.ProjectItems.AddFolder(folder);
-                
+                try
+                {
+                    folderItem = project.ProjectItems.AddFolder(folder);
+                }
+                catch (Exception ex)
+                {
+
+                }
+                finally
+                {
+                    
+                    System.IO.File.WriteAllText(filePath, content);
+                    project.ProjectItems.AddFromFile(filePath);
+                    project.Save();
+                    
+                }
             }
-           // ProjectItem folderItem = project.ProjectItems.AddFolder($"{folder}");
-
-            // Créer et écrire le contenu du fichier
-            System.IO.File.WriteAllText(filePath, content);
-
-            // Ajouter le fichier au projet
-            project.ProjectItems.AddFromFile(filePath);
-            project.Save();
+         
         }
         public void CreateApWebApiProjectFromTemplate()
         {
@@ -502,6 +504,11 @@ namespace EM2AExtension.Logic
 
             dte.Solution.AddFromTemplate(templatePath, projectPath, projectName, false);
             dte.StatusBar.Text = "Custom ASP.NET Core Web API Project Created!";
-        }       
+        }
+        public void Save()
+        {
+            ThreadHelper.ThrowIfNotOnUIThread();
+            dte.Solution.SaveAs(dte.Solution.FileName);
+        }
     }
 }
