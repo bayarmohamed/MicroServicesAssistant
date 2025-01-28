@@ -32,23 +32,52 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddOpenApiDocument(config =>
 {
-    config.Title = ""My API"";
-    config.Version = ""v1"";
-    config.Description = ""API documentation with NSwag"";
+    config.DocumentName = ""v1"";
+    config.PostProcess = postProcess => { postProcess.Info.Title = ""API""; };
+});
+
+builder.Services.AddOpenApiDocument(config =>
+{
+    config.DocumentName = ""facade"";
+    config.ApiGroupNames = new[] { ""facade"" };
+    config.PostProcess = postProcess => { postProcess.Info.Title = ""Facade contracts are used for inter services communication""; };
+});
+builder.Services.AddOpenApiDocument(config =>
+{
+    config.DocumentName = ""interface"";
+    config.ApiGroupNames = new[] { ""interface"" };
+    config.PostProcess = postProcess => { postProcess.Info.Title = ""Interfec contracts are used for external explosing services communication""; };
 });
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwaggerUI();  // Swagger UI
-    app.UseOpenApi();     // Serves the OpenAPI/Swagger document
+    app.UseOpenApi(config =>
+    {
+        config.DocumentName = ""facade"";
+        config.Path = ""/swagger/facade/swagger.json"";
+    });
+
+    app.UseOpenApi(config =>
+    {
+        config.DocumentName = ""interface"";
+        config.Path = ""/swagger/interface/swagger.json"";
+    });
+
+    app.UseSwaggerUi(c =>
+    {
+        c.Path = ""/swagger/facade"";
+        c.DocumentPath = ""/swagger/facade/swagger.json"";
+    }).UseSwaggerUi(c =>
+    {
+        c.Path = ""/swagger/interface"";
+        c.DocumentPath = ""/swagger/interface/swagger.json"";
+    });
 }
 
 app.MapControllers();
 app.Run();
-
 ";
 
         public static string controllerCode = @"
@@ -60,6 +89,37 @@ public class HomeController : ControllerBase
 {
     [HttpGet]
     public IActionResult Get() => Ok(""Hello from ASP.NET Core Web API!"");
+}
+";
+        public static string controllerInterfaceCode = @"
+using Microsoft.AspNetCore.Mvc;
+
+namespace Sales.Interface
+{
+    [ApiController]
+    [Route(""interface/[controller]"")]
+    [ApiExplorerSettings(GroupName =""interface"")]
+    public class InterfaceController : ControllerBase
+    {
+        [HttpGet]
+        public IActionResult Get() => Ok(""Hello from ASP.NET Interface API!"");
+    }
+
+}
+";
+        public static string controllerFacadeCode = @"
+using Microsoft.AspNetCore.Mvc;
+
+namespace Sales.Facade
+{
+    [ApiController]
+    [Route(""facade/[controller]"")]
+    [ApiExplorerSettings(GroupName = ""facade"")]
+    public class FacadeController : ControllerBase
+    {
+        [HttpGet]
+        public IActionResult Get() => Ok(""Hello from ASP.NET Facade API!"");
+    }
 }
 ";
         public static string DbContextFactory(string DB) => @"

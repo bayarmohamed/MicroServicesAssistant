@@ -2,6 +2,7 @@
 using EM2AExtension.Models;
 using EM2AExtension.Templates;
 using EM2AExtension.WpfCommands;
+using Microsoft.VisualStudio.ProjectSystem.VS;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -84,22 +85,29 @@ namespace EM2AExtension.ViewModels
             maker.AddFileToProject(projectInFolder.CreatedProject, $"program.cs", CodeTemplates.programCode);
             maker.AddFileToFolderProject(projectInFolder.CreatedProject, "Controllers", $"EnvironmentController.cs", CodeTemplates.controllerCode);           
         }
-        private void CreateSdk()
+        private void CreateFacadeSdk()
         {
-            var project = maker.CreateSDKLibraryProjectInSelectedFolder(prjName, "BE");
+            var project = maker.CreateSDKLibraryProjectInSelectedFolder($"{prjName}", "BE", "Facade");
             var result = directoriesMaker.AddSDKProjectToSubSolutionFolder(projectInFolder.CreatedSdkProject, project.Item1);
-            maker.AddFileToFolderProject(result, "Generator", $"interface.nswag", CodeTemplates.NswagJsonGenCode(prjName,"Interface"));
             maker.AddFileToFolderProject(result, "Generator", $"facade.nswag", CodeTemplates.NswagJsonGenCode(prjName,"Facade"));
+        }
+        private void CreateInterfaceSdk()
+        {
+            var project = maker.CreateSDKLibraryProjectInSelectedFolder($"{prjName}", "BE", "Interface");
+            var result = directoriesMaker.AddSDKProjectToSubSolutionFolder(projectInFolder.CreatedSdkProject, project.Item1);
+            maker.AddFileToFolderProject(result, "Generator", $"interface.nswag", CodeTemplates.NswagJsonGenCode(prjName, "Interface"));
         }
         private void CreateInterfaceLibrary()
         {
             var project = maker.CreateInterfaceProjectInSelectedFolder($"{InterfaceName}", "BE");
-            directoriesMaker.AddProjectToSelectedFolder(selectedProjectFolder, project.Item1);           
+            var result = directoriesMaker.AddProjectToSelectedFolder(selectedProjectFolder, project.Item1);
+            maker.AddFileToFolderProject(result, "Controller", $"MyInterfaceController.cs", CodeTemplates.controllerInterfaceCode);
         }
         private void CreateFacadeLibrary()
         {
             var project = maker.CreateFacadeProjectInSelectedFolder($"{FacadeName}", "BE");
-            directoriesMaker.AddProjectToSelectedFolder(selectedProjectFolder, project.Item1);
+            var result = directoriesMaker.AddProjectToSelectedFolder(selectedProjectFolder, project.Item1);
+            maker.AddFileToFolderProject(result, "Controller", $"MyFacadeController.cs", CodeTemplates.controllerFacadeCode);
         }
         private void CreateBLLibrary()
         {
@@ -129,7 +137,8 @@ namespace EM2AExtension.ViewModels
                 if (!string.IsNullOrEmpty(PrjName))
                 {
                     CreateApi();
-                    CreateSdk();
+                    CreateFacadeSdk();
+                    CreateInterfaceSdk();
                     //CreateInterfaceLibrary();
                 }
             }           

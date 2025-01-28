@@ -1,4 +1,5 @@
 ﻿using EM2AExtension.Helpers;
+using EM2AExtension.Models;
 using EnvDTE;
 using EnvDTE80;
 using Microsoft.Build.Construction;
@@ -124,7 +125,7 @@ namespace EM2AExtension.Logic
             execTaskInterface.SetParameter("EnvironmentVariables",
                @"ASPNETCORE_ENVIRONMENT=Development;NSwag=true");
             execTaskInterface.SetParameter("Command",
-                @"$(NSwagExe_Net90) run ..\Sdks\" + $"{originalPrjName}" +@".sdk\Generator\interface.nswag /variables:Configuration=$(Configuration)");            
+                @"$(NSwagExe_Net90) run ..\Sdks\" + $"{originalPrjName}.Interface" +@".sdk\Generator\interface.nswag /variables:Configuration=$(Configuration)");            
             // Append the Exec task to the Target
             project.AppendChild(newTarget);
             
@@ -134,7 +135,7 @@ namespace EM2AExtension.Logic
             execTaskFacade.SetParameter("EnvironmentVariables",
                @"ASPNETCORE_ENVIRONMENT=Development;NSwag=true");
             execTaskFacade.SetParameter("Command",
-                @"$(NSwagExe_Net90) run ..\Sdks\" + $"{originalPrjName}" + @".sdk\Generator\facade.nswag /variables:Configuration=$(Configuration)");
+                @"$(NSwagExe_Net90) run ..\Sdks\" + $"{originalPrjName}.Facade" + @".sdk\Generator\facade.nswag /variables:Configuration=$(Configuration)");
             // Append the Exec task to the Target
             
             newTarget.AppendChild(execTaskFacade);
@@ -143,13 +144,13 @@ namespace EM2AExtension.Logic
             project.Save(csprojPath);
             return Tuple.Create(csprojPath, project);
         }
-        public Tuple<string, ProjectRootElement> CreateSDKLibraryProjectInSelectedFolder(string projectName, string selectedFolder)
+        public Tuple<string, ProjectRootElement> CreateSDKLibraryProjectInSelectedFolder(string projectName, string selectedFolder, string level)
         {
             Solution2 solution = (Solution2)dte.Solution;
             SelectedItem selectedItem = dte.SelectedItems.Item(1);
 
-            var projectFolder = selectedFolder + @"\" + projectName + @"\Sdks\" + projectName + ".SDK";
-            projectName = $"{projectName}.SDK.csproj";
+            var projectFolder = selectedFolder + @"\" + projectName + @"\Sdks\" + projectName + $".{level}.SDK";
+            projectName = $"{projectName}.{level}.SDK.csproj";
 
             var projectPath = Path.Combine(Environment.CurrentDirectory, $"{projectFolder}");
             Directory.CreateDirectory(projectPath);

@@ -49,6 +49,7 @@
     <Compile Include="Logic\FoldersAndDirectoriesMaker.cs" />
     <Compile Include="Logic\Maker.cs" />
     <Compile Include="Models\GeneratedProjectModel.cs" />
+    <Compile Include="Models\Level.cs" />
     <Compile Include="Options\General.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Commands\AddProject.cs" />
