@@ -1,0 +1,35 @@
+﻿<platform:DialogWindow  x:Class="EM2AExtension.Wizard"
+                        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                        xmlns:platform="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.15.0"
+                        xmlns:toolkit="clr-namespace:Community.VisualStudio.Toolkit;assembly=Community.VisualStudio.Toolkit"
+                        toolkit:Themes.UseVsTheme="True"
+                        mc:Ignorable="d"
+                        Width="600"
+                        Height="400"
+                        d:DesignHeight="600"
+                        d:DesignWidth="400">
+    <Grid>
+        <TextBox Text="{Binding SelectedProject}" HorizontalAlignment="Left" Height="34" Margin="102,19,0,0" VerticalAlignment="Top" Width="288"/>
+        <Label Content="Curent project" HorizontalAlignment="Left" Height="34" Margin="0,19,0,0" VerticalAlignment="Top" Width="108"/>
+        <Button Command="{Binding CmdAddInterface}" Content="Add" HorizontalAlignment="Left" Height="34" Margin="319,104,0,0" VerticalAlignment="Top" Width="76"/>
+        <TextBox  HorizontalAlignment="Left" Height="33" Margin="102,65,0,0" TextWrapping="Wrap" Text="{Binding PrjName}" VerticalAlignment="Top" Width="212"/>
+        <Label Content="Microservice
+               " HorizontalAlignment="Left" Height="34" Margin="3,65,0,0" VerticalAlignment="Top" Width="118"/>
+        <Button Command="{Binding CmdAddMicroservice}" Content="Create" HorizontalAlignment="Left" Height="34" Margin="319,65,0,0" VerticalAlignment="Top" Width="76"/>
+        <TextBox Text="{Binding InterfaceName}" HorizontalAlignment="Left" Height="34" Margin="102,104,0,0" VerticalAlignment="Top" Width="212"/>
+        <Label Content="Interface" HorizontalAlignment="Left" Height="34" Margin="5,104,0,0" VerticalAlignment="Top" Width="108"/>
+        <Button Command="{Binding CmdAddFacade}" Content="Add" HorizontalAlignment="Left" Height="34" Margin="319,143,0,0" VerticalAlignment="Top" Width="76"/>
+        <TextBox Text="{Binding FacadeName}" HorizontalAlignment="Left" Height="34" Margin="102,143,0,0" VerticalAlignment="Top" Width="212"/>
+        <Label Content="Facade" HorizontalAlignment="Left" Height="34" Margin="5,142,0,0" VerticalAlignment="Top" Width="108"/>
+        <Button Command="{Binding CmdAddBL}" Content="Add" HorizontalAlignment="Left" Height="34" Margin="319,185,0,0" VerticalAlignment="Top" Width="76"/>
+        <TextBox Text="{Binding BLName}" HorizontalAlignment="Left" Height="34" Margin="102,185,0,0" VerticalAlignment="Top" Width="212"/>
+        <Label Content="Business layer" HorizontalAlignment="Left" Height="34" Margin="5,185,0,0" VerticalAlignment="Top" Width="108"/>
+        <Button Command="{Binding CmdAddDL}" Content="Add" HorizontalAlignment="Left" Height="34" Margin="319,224,0,0" VerticalAlignment="Top" Width="76"/>
+        <TextBox Text="{Binding DLName}" HorizontalAlignment="Left" Height="34" Margin="102,224,0,0" VerticalAlignment="Top" Width="212"/>
+        <Label Content="Domain layer" HorizontalAlignment="Left" Height="34" Margin="5,224,0,0" VerticalAlignment="Top" Width="108"/>
+
+    </Grid>
+</platform:DialogWindow>
