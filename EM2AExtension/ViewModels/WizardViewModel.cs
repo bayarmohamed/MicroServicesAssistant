@@ -123,8 +123,12 @@ namespace EM2AExtension.ViewModels
         {
             var project = maker.CreateDomainInSelectedFolder($"{DLName}", "BE");
             var createdprj = directoriesMaker.AddProjectToSelectedFolder(selectedProjectFolder, project.Item1);
-            maker.AddFileToFolderProject(createdprj, "DBFactory", $"{DLName}DBContextFactory.cs", CodeTemplates.DbContextFactory(DLName));
             maker.AddFileToFolderProject(createdprj, "DataBaseContext", $"{DLName}DBContext.cs", CodeTemplates.DbContext(DLName));
+            maker.AddFileToFolderProject(createdprj, "DBFactory", $"{DLName}DBContextFactory.cs", CodeTemplates.DbContextFactory(DLName));
+        }
+        private void SaveSolution()
+        {
+            maker.Save();
         }
         private bool CanExecuteAddNewMicroserviceCommand(object obj)
         {
@@ -139,7 +143,7 @@ namespace EM2AExtension.ViewModels
                     CreateApi();
                     CreateFacadeSdk();
                     CreateInterfaceSdk();
-                    //CreateInterfaceLibrary();
+                    SaveSolution();
                 }
             }           
         }
