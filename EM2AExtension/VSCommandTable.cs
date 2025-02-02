@@ -22,5 +22,7 @@ namespace EM2AExtension
     {
         public const int MyMenuGroup = 0x0001;
         public const int AddProject = 0x0100;
+        public const int SolutionExplorerContextMenuGroup = 0x0002;
+        public const int MyContextMenuCommand = 0x0200;
     }
 }

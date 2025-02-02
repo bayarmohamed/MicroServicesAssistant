@@ -45,6 +45,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Commands\CreateMicroService.cs" />
     <Compile Include="Helpers\PathConstants.cs" />
     <Compile Include="Logic\FoldersAndDirectoriesMaker.cs" />
     <Compile Include="Logic\Maker.cs" />
