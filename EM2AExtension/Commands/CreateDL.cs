@@ -1,13 +1,13 @@
 ﻿namespace EM2AExtension
 {
-    [Command(PackageIds.AddMicroservice)]
-    internal sealed class CreateMicroService : BaseCommand<CreateMicroService>
+    [Command(PackageIds.AddDL)]
+    internal sealed class CreateDL : BaseCommand<CreateDL>
     {
         protected override async Task ExecuteAsync(OleMenuCmdEventArgs e)
         {
             try
             {
-                new MicroserviceWizard().Show();
+                new DLWizard().Show();
             }
             catch (Exception ex)
             {

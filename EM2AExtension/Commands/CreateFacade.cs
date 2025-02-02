@@ -1,13 +1,13 @@
 ﻿namespace EM2AExtension
 {
-    [Command(PackageIds.AddMicroservice)]
-    internal sealed class CreateMicroService : BaseCommand<CreateMicroService>
+    [Command(PackageIds.AddFacade)]
+    internal sealed class CreateFacade : BaseCommand<CreateFacade>
     {
         protected override async Task ExecuteAsync(OleMenuCmdEventArgs e)
         {
             try
             {
-                new MicroserviceWizard().Show();
+                new FacadeWizard().Show();
             }
             catch (Exception ex)
             {
