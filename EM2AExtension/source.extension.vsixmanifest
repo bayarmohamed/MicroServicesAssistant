@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="EM2AExtension.a9cb4c0e-3880-4b66-b967-5eef7bdf2b66" Version="1.0" Language="en-US" Publisher="Company" />
-        <DisplayName>EM2AExtension</DisplayName>
+        <Identity Id="EM2AExtension.9e156ae9-863b-4646-bfa4-458ba70c1aaa" Version="1.0" Language="en-US" Publisher="Mohamed Bayar" />
+        <DisplayName>EM2A</DisplayName>
         <Description xml:space="preserve">The Enterprise Microservice Architecture Assistant is a powerful Visual Studio extension created By Bayar Mohamed designed to streamline the creation, deployment, and management of microservices. It automates repetitive tasks, allowing developers to focus on building robust, scalable systems.</Description>
         <MoreInfo>https://www.linkedin.com/in/mohamed-b-643558148/</MoreInfo>
-        <Icon>Resources\Icon.png</Icon>
-        <PreviewImage>Resources\Icon.png</PreviewImage>
+        <Icon>EM2A.png</Icon>
+        <PreviewImage>EM2A.png</PreviewImage>
+        <Tags>microservice</Tags>
         <Preview>true</Preview>
     </Metadata>
     <Installation>
