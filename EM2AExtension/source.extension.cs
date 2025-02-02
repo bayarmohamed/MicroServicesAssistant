@@ -9,7 +9,7 @@ namespace EM2AExtension
     {
         public const string Id = "EM2AExtension.a9cb4c0e-3880-4b66-b967-5eef7bdf2b66";
         public const string Name = "EM2AExtension";
-        public const string Description = @"Empty VSIX Project.";
+        public const string Description = @"The Enterprise Microservice Architecture Assistant is a powerful Visual Studio extension designed to streamline the creation, deployment, and management of microservices. It automates repetitive tasks, allowing developers to focus on building robust, scalable systems.";
         public const string Language = "en-US";
         public const string Version = "1.0";
         public const string Author = "Company";
