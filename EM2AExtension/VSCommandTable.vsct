@@ -11,12 +11,16 @@
       <Group guid="EM2AExtension" id="MyMenuGroup" priority="0x0600">
         <Parent guid="VSMainMenu" id="Tools"/>
       </Group>
+		 <!--New Group for the Solution Explorer Context Menu--> 
+		<!--<Group guid="EM2AExtension" id="SolutionExplorerContextMenuGroup" priority="0x0700">
+			<Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_CV_PROJECT"/>
+		</Group>-->
     </Groups>
 
     <!--This section defines the elements the user can interact with, like a menu command or a button
         or combo box in a toolbar. -->
     <Buttons>
-      <Button guid="EM2AExtension" id="AddProject" priority="0x0100" type="Button">
+      <!--<Button guid="EM2AExtension" id="AddProject" priority="0x0100" type="Button">
         <Parent guid="EM2AExtension" id="MyMenuGroup" />
         <Icon guid="ImageCatalogGuid" id="StatusInformation" />
         <CommandFlag>IconIsMoniker</CommandFlag>
@@ -24,9 +28,61 @@
           <ButtonText>Add project</ButtonText>
           <LocCanonicalName>.EM2AExtension.AddProject</LocCanonicalName>
         </Strings>
-      </Button>		
+      </Button>-->
+
+		<!-- New Button for the Solution Explorer Context Menu -->
+		<Button guid="EM2AExtension" id="AddMicroservice" priority="0x0100" type="Button">
+			<Parent guid="EM2AExtension" id="MyMenuGroup" />
+			<Icon guid="ImageCatalogGuid" id="StatusInformation" />
+			<CommandFlag>IconIsMoniker</CommandFlag>
+			<Strings>
+				<ButtonText>Add new Microservice</ButtonText>
+				<LocCanonicalName>.EM2AExtension.MyContextMenuCommand</LocCanonicalName>
+			</Strings>
+		</Button>
+		<!-- New Button for the Solution Explorer Context Menu -->
+		<Button guid="EM2AExtension" id="AddInterface" priority="0x0100" type="Button">
+			<Parent guid="EM2AExtension" id="MyMenuGroup" />
+			<Icon guid="ImageCatalogGuid" id="StatusInformation" />
+			<CommandFlag>IconIsMoniker</CommandFlag>
+			<Strings>
+				<ButtonText>Add new interface layer</ButtonText>
+				<LocCanonicalName>.EM2AExtension.MyContextMenuCommand</LocCanonicalName>
+			</Strings>
+		</Button>
+		<!-- New Button for the Solution Explorer Context Menu -->
+		<Button guid="EM2AExtension" id="AddFacade" priority="0x0100" type="Button">
+			<Parent guid="EM2AExtension" id="MyMenuGroup" />
+			<Icon guid="ImageCatalogGuid" id="StatusInformation" />
+			<CommandFlag>IconIsMoniker</CommandFlag>
+			<Strings>
+				<ButtonText>Add new facade layer</ButtonText>
+				<LocCanonicalName>.EM2AExtension.MyContextMenuCommand</LocCanonicalName>
+			</Strings>
+		</Button>
+		<!-- New Button for the Solution Explorer Context Menu -->
+		<Button guid="EM2AExtension" id="AddBL" priority="0x0100" type="Button">
+			<Parent guid="EM2AExtension" id="MyMenuGroup" />
+			<Icon guid="ImageCatalogGuid" id="StatusInformation" />
+			<CommandFlag>IconIsMoniker</CommandFlag>
+			<Strings>
+				<ButtonText>Add new BL</ButtonText>
+				<LocCanonicalName>.EM2AExtension.MyContextMenuCommand</LocCanonicalName>
+			</Strings>
+		</Button>
+		<!-- New Button for the Solution Explorer Context Menu -->
+		<Button guid="EM2AExtension" id="AddDL" priority="0x0100" type="Button">
+			<Parent guid="EM2AExtension" id="MyMenuGroup" />
+			<Icon guid="ImageCatalogGuid" id="StatusInformation" />
+			<CommandFlag>IconIsMoniker</CommandFlag>
+			<Strings>
+				<ButtonText>Add new DL</ButtonText>
+				<LocCanonicalName>.EM2AExtension.MyContextMenuCommand</LocCanonicalName>
+			</Strings>
+		</Button>
 	</Buttons>
-  
+	  
+	
 	  
   </Commands>
 
@@ -34,6 +90,14 @@
     <GuidSymbol name="EM2AExtension" value="{dd666b1c-a255-45a1-9add-52d6be33d7b0}">
       <IDSymbol name="MyMenuGroup" value="0x0001" />
       <IDSymbol name="AddProject" value="0x0100" />
-    </GuidSymbol>	 
+	  <IDSymbol name="AddMicroservice" value="0x0200" />
+	  <IDSymbol name="AddInterface" value="0x0300" />
+	  <IDSymbol name="AddFacade" value="0x0400" />
+		<IDSymbol name="AddBL" value="0x0500" />
+		<IDSymbol name="AddDL" value="0x0600" />
+		<!-- New Symbols for the Context Menu -->
+		<!--<IDSymbol name="SolutionExplorerContextMenuGroup" value="0x0002" />
+		<IDSymbol name="MyContextMenuCommand" value="0x0200" />-->
+    </GuidSymbol>  
   </Symbols>
 </CommandTable>

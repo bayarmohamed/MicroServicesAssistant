@@ -45,6 +45,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Commands\CreateBL.cs" />
+    <Compile Include="Commands\CreateDL.cs" />
+    <Compile Include="Commands\CreateFacade.cs" />
+    <Compile Include="Commands\CreateInterface.cs" />
+    <Compile Include="Commands\CreateMicroService.cs" />
+    <Compile Include="Helpers\KnownProjectTypes.cs" />
     <Compile Include="Helpers\PathConstants.cs" />
     <Compile Include="Logic\FoldersAndDirectoriesMaker.cs" />
     <Compile Include="Logic\Maker.cs" />
@@ -61,6 +67,21 @@
     </Compile>
     <Compile Include="Templates\CodeTemplates.cs" />
     <Compile Include="Templates\GeneratorTemplate.cs" />
+    <Compile Include="ToolWindows\BLWizard.xaml.cs">
+      <DependentUpon>BLWizard.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ToolWindows\DLWizard.xaml.cs">
+      <DependentUpon>DLWizard.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ToolWindows\FacadeWizard.xaml.cs">
+      <DependentUpon>FacadeWizard.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ToolWindows\InterfaceWizard.xaml.cs">
+      <DependentUpon>InterfaceWizard.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ToolWindows\MicroserviceWizard.xaml.cs">
+      <DependentUpon>MicroserviceWizard.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ToolWindows\Wizard.xaml.cs">
       <DependentUpon>Wizard.xaml</DependentUpon>
     </Compile>
@@ -73,6 +94,14 @@
     <Compile Include="WpfCommands\RelayCommand.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="EM2A.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="EMAA.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <Content Include="ProjectTemplates\APITemplate.zip">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
@@ -125,6 +154,26 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="ToolWindows\BLWizard.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ToolWindows\DLWizard.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ToolWindows\FacadeWizard.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ToolWindows\InterfaceWizard.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ToolWindows\MicroserviceWizard.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ToolWindows\Wizard.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

@@ -7,12 +7,12 @@ namespace EM2AExtension
 {
     internal sealed partial class Vsix
     {
-        public const string Id = "EM2AExtension.a9cb4c0e-3880-4b66-b967-5eef7bdf2b66";
-        public const string Name = "EM2AExtension";
-        public const string Description = @"Empty VSIX Project.";
+        public const string Id = "EM2AExtension.9e156ae9-863b-4646-bfa4-458ba70c1aaa";
+        public const string Name = "EM2A";
+        public const string Description = @"The Enterprise Microservice Architecture Assistant is a powerful Visual Studio extension created By Bayar Mohamed designed to streamline the creation, deployment, and management of microservices. It automates repetitive tasks, allowing developers to focus on building robust, scalable systems.";
         public const string Language = "en-US";
         public const string Version = "1.0";
-        public const string Author = "Company";
-        public const string Tags = "";
+        public const string Author = "Mohamed Bayar";
+        public const string Tags = "microservice";
     }
 }
